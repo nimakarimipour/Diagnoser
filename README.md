@@ -28,9 +28,11 @@ edu.ucr.cs.riple:nullaway:0.7.12-SNAPSHOT
 ## Requirements for Target Project
 ---
 The only requirement for a target project to run autofixer on is that it needs to work with the [customized](https://github.com/nimakarimipour/NullAway) version of `NullAway` mentioned in `Dependencies/Installation` rather than the original version.
-After that the original version of the `NullAway` is replaced by the customized version, the following flag must be sent to `NullAway` to activate the autofix features.
+After that the original version of the `NullAway` is replaced by the customized version, the following flags must be sent to `NullAway` to activate the autofix features.
 ```
 -XepOpt:NullAway:AutoFix=true
+-XepOpt:NullAway:FixAnnotations=androidx.annotation.NonNull,androidx.annotation.Nullable
+//Default is javax.annotation.Nonnull,javax.annotation.Nullable
 ```
 
 Please find a sample project setup below:
@@ -50,6 +52,8 @@ tasks.withType(JavaCompile) {
                                               "-XepOpt:NullAway:AnnotatedPackages=",
                                               //Autofix flag must be set to true
                                               "-XepOpt:NullAway:AutoFix=true",
+                                              //Annotation to add to code [@Nonnull:@Nullable]
+                                              "-XepOpt:NullAway:FixAnnotations=androidx.annotation.NonNull,androidx.annotation.Nullable",
                                               "-XepDisableAllWarnings"]
         options.compilerArgs << "-Xmaxerrs" << "100000"
     }
