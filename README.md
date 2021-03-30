@@ -73,7 +73,6 @@ Please find a sample `fixes.json` below:
             "uri": "file:AbsolutePathTo/CustomGestureDetector.java",
             "inject": "true"
         },
-        // and other fixes
     ]
 }
 ```
