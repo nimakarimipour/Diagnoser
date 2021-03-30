@@ -56,6 +56,34 @@ tasks.withType(JavaCompile) {
 }
 ```
 
+## Config
+---
+Configurations are written inside the `config.json` file. Please find a sample below:
+```json
+{
+    "PROJECT_PATH": "/Users/nima/Developer/ArtifactEvaluation/NullAwayFixer/Projects/PhotoView",
+    "BUILD_COMMAND": "./gradlew build -x test",
+    "FIX_PATH": "/tmp/NullAwayFix/fixes.json"
+}
+```
+Below is the description of each setting:
+1. `PROJECT_PATH`: the path to the project directory (if a subproject needs to be analyzied, this path needs to point to the subproject not the root project)
+2. `BUILD_COMMAND`: the command to execute `NullAway` for the project at the path given in `PROJECT_PATH`. The script will use the command, `cd PROJECT_PATH && BUILD_COMMAND` to execute `NullAway`.
+3. The path to the `fixes.json` file where all the fixes are written which we want to anaylyze their impact.
+
+## Run
+---
+Before running, please make sure that all the changes in the `setup` section has been applied to the target project.
+
+The script is written in python in the file `run.py`. It needs the `NullAwayAutoFixer.jar` file to execute at the relative path: `./jars/NulAwayAutoFixer.jar` just like the structure in this repo.
+Run the following command to execute the diagnose task
+
+```python
+python run.py
+```
+
+## Output
+
 If `AutoFix` flag is set to `true`, anytime `NullAway` (can be via the build command) is executed on a project, a `fixes.json` file will be generetaed which includes all the suggested fixes.
 
 Please find a sample `fixes.json` below:
@@ -99,32 +127,3 @@ Here `jump` refers to difference in number of errors.
     ]
 }
 ```
-
-## Config
----
-Configurations are written inside the `config.json` file. Please find a sample below:
-```json
-{
-    "PROJECT_PATH": "/Users/nima/Developer/ArtifactEvaluation/NullAwayFixer/Projects/PhotoView",
-    "BUILD_COMMAND": "./gradlew build -x test",
-    "FIX_PATH": "/tmp/NullAwayFix/fixes.json"
-}
-```
-Below is the description of each setting:
-1. `PROJECT_PATH`: the path to the project directory (if a subproject needs to be analyzied, this path needs to point to the subproject not the root project)
-2. `BUILD_COMMAND`: the command to execute `NullAway` for the project at the path given in `PROJECT_PATH`. The script will use the command, `cd PROJECT_PATH && BUILD_COMMAND` to execute `NullAway`.
-3. The path to the `fixes.json` file where all the fixes are written which we want to anaylyze their impact.
-
-## Run
----
-Before running, please make sure that all the changes in the `setup` section has been applied to the target project.
-
-The script is written in python in the file `run.py`. It needs the `NullAwayAutoFixer.jar` file to execute at the relative path: `./jars/NulAwayAutoFixer.jar` just like the structure in this repo.
-Run the following command to execute the diagnose task
-
-```python
-python run.py
-```
-
-## Output
-
