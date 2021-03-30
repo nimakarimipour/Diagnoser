@@ -55,3 +55,6 @@ Run the following command to execute the diagnose task
 ```python
 python run.py
 ```
+
+## Output
+
