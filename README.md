@@ -14,6 +14,22 @@ Script to run [AutoFixer](https://github.com/nimakarimipour/NullAwayAutoFixer) D
 
 `AutoFixer` is delivered via gradle plugin, and all those dependencies will be managed by gradle, However, In this repo, `AutoFixer` is provided by a `jar` file where all above dependenceis are inside the jar file, therefore, no installation is requred.
 
+## Requirements for target Project
+The only requirement for a target project to run autofixer on is that it needs to work with the customized version of `NullAway` mentioned in `Dependencies/Installation` rather than the original version.
+After that the original version of the `NullAway` is replaced by the [customized](https://github.com/nimakarimipour/NullAway) version the following flags must be sent to `NullAway` to activate the auto fix features.
+```
+-XepOpt:NullAway:AutoFix=true
+```
+To install the customized version in `maven local` repository, please run the following command:
+```
+git clone https://github.com/nimakarimipour/NullAway
+cd NullAway
+git checkout autofix
+./gradlew install
+```
+or simply run the `dependenceis.sh` script.
+
+
 ## Config
 
 Configurations are written inside the `config.json` file. Please find the sample below:
