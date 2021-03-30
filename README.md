@@ -107,7 +107,7 @@ Please find a sample `fixes.json` below:
 
 After the diagnose task is finished, `diagnose_report.json` will be created which holds the information regarding the effectiveness of each fix written in `fixes.json`. Please find a sample below:
 
-Here `jump` refers to difference in number of errors.
+Here `jump` refers to the difference in number of errors.
 ```json
 {
     "reports": [
