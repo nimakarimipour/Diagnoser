@@ -69,10 +69,33 @@ Please find a sample `fixes.json` below:
             "param": "mVelocityTracker",
             "location": "CLASS_FIELD",
             "class": "com.github.CustomGestureDetector",
-            "pkg": "com.github.chrisbanes.photoview",
+            "pkg": "com.github",
             "uri": "file:AbsolutePathTo/CustomGestureDetector.java",
             "inject": "true"
         },
+    ]
+}
+```
+
+After the diagnose task is finished, `diagnose_report.json` will be created which holds the information regarding the effectiveness of each fix written in `fixes.json`. Please find a sample below:
+
+Here `jump` refers to difference in number of errors.
+```json
+{
+    "reports": [
+        {
+            "annotation": "javax.annotation.Nullable",
+            "reason": "FIELD_NO_INIT",
+            "method": "",
+            "param": "mVelocityTracker",
+            "location": "CLASS_FIELD",
+            "class": "com.github.CustomGestureDetector",
+            "pkg": "com.github",
+            "inject": "true",
+            "uri": "file:AbsolutePathTo/CustomGestureDetector.java",
+            "errors": [],
+            "jump": -3
+        }
     ]
 }
 ```
