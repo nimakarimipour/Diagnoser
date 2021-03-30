@@ -15,7 +15,7 @@ if(arg == "pre"):
     os.system(command)
     fixes_file = open(data['FIX_PATH'])
     fixes = json.load(fixes_file)
-    field_no_inits = [x for x in fixes['fixes'] if x['reason'] == 'FIELD_NO_INIT']
+    field_no_inits = [x for x in fixes['fixes'] if (x['reason'] == 'FIELD_NO_INIT' and x['location'] == 'CLASS_FIELD')]
     method_path = fixes_dir + "/method_info.json"
     methods = json.load(open(method_path))
     init_methods = []
