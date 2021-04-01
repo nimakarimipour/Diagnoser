@@ -9,7 +9,7 @@ Script to run [AutoFixer](https://github.com/nimakarimipour/NullAwayAutoFixer) D
 2. [Customized NullAway](https://github.com/nimakarimipour/NullAway): A special version of `NullAway` with suggested fixes capability. It needs to be on `autofix` branch to have all the fix suggestions features available.
 
 ### Installation
-`AutoFixer` is delivered via gradle plugin, and all those dependencies will be managed by gradle, However, In this repo, `AutoFixer` is provided via a `jar` file where all dependenceis related to `AnnotationInjector` is already handled. 
+`AutoFixer` is delivered via a gradle plugin, and all those dependencies will be managed by gradle, However, In this repo, `AutoFixer` is provided via a `jar` file where all dependenceis related to `AnnotationInjector` are already handled. 
 To install the customized version of `NullAway` in `maven local` repository, please follow the instructions below:
 ```
 git clone https://github.com/nimakarimipour/NullAway
