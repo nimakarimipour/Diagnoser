@@ -7,6 +7,9 @@ data = json.load(f)
 command = "cd " + data['PROJECT_PATH'] + " && " + data['BUILD_COMMAND']
 fixes_dir = data['FIX_PATH'][0: data['FIX_PATH'].rindex("/")] if "/" in data['FIX_PATH'] else "/"
 
+if(len(sys.argv) != 2):
+    raise ValueError("Needs one argument to run: diagnose/apply/pre/deep/clean")
+
 def delete(file):
     try:
         os.remove(file)
@@ -21,13 +24,10 @@ def clean():
     delete(fixes_dir + "/cleaned.json")
     delete(fixes_dir + "/init_methods.json")
     delete(fixes_dir + "/method_info.json")
+    delete(fixes_dir + "/diagnosed.json")
     print("Finished.")
 
-if(len(sys.argv) != 2):
-    raise ValueError("Needs one argument to run: diagnose/apply/pre/clean")
-arg = sys.argv[1]
-
-if(arg == "pre"):
+def pre():
     print("Started preprocessing task...")
     print("Removing old files...")
     method_path = fixes_dir + "/method_info.json"
@@ -76,7 +76,7 @@ if(arg == "pre"):
     os.system("cd jars && java -jar NullAwayAutoFixer.jar apply " + fixes_dir + "/init_methods.json")
     print("Annotated.\nFinished.")
 
-elif(arg == "diagnose"):
+def diagnose():
     print("Started diagnose task...")
     print("Making build command for project...")
     command = '"cd ' + data['PROJECT_PATH'] + " && " + data['BUILD_COMMAND'] + '"'
@@ -85,20 +85,34 @@ elif(arg == "diagnose"):
     os.system("cd jars && java -jar NullAwayAutoFixer.jar diagnose " + data['FIX_PATH'] + " " + command)
     print("Finsihed.")
 
-elif(arg == "apply"):
-    clean()
+def apply():
+    delete(fixes_dir + "/cleaned.json")
     print("Analyzing diagnose report...")
-    fixes_file = open(fixes_dir + "/diagnose_report.json")
-    fixes = json.load(fixes_file)
-    cleaned = []
+    report_file = open(fixes_dir + "/diagnose_report.json")
+    reports = json.load(report_file)
+    cleaned = {}
     print("Selecting effective fixes...")
-    cleaned['fixes'] = [fix for fix in fixes['fixes'] if fix['jump'] < 0]
+    cleaned['fixes'] = [fix for fix in reports['reports'] if fix['jump'] < 0]
     print("Selected effective fixes.")
     with open(fixes_dir + "/cleaned.json", 'w') as outfile:
         json.dump(cleaned, outfile)
     print("Applying fixes at location: " + fixes_dir + "/cleaned.json")
     os.system("cd jars && java -jar NullAwayAutoFixer.jar apply " + fixes_dir + "/cleaned.json")
 
-elif(arg == "clean"):
+
+command = sys.argv[1]
+if(command == "pre"):
+    pre()
+elif(command == "diagnose"):
+    diagnose()
+elif(command == "apply"):
+    apply()
+elif(command == "clean"):
     clean()
+elif(command == "deep"):
+    pass
+
+
+else:
+    raise ValueError("Unknown command.")
     
