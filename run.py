@@ -5,7 +5,7 @@ import shutil
 
 f = open('config.json')
 data = json.load(f)
-command = "cd " + data['PROJECT_PATH'] + " && " + data['BUILD_COMMAND']
+build_command = "cd " + data['PROJECT_PATH'] + " && " + data['BUILD_COMMAND']
 out_dir = "/tmp/NullAwayFix"
 
 if(len(sys.argv) != 2):
@@ -38,7 +38,7 @@ def pre():
     delete(out_dir + "/init_methods.json")
     print("Removed.")
     print("Building project...")
-    os.system(command + " > /dev/null 2>&1")
+    os.system(build_command + " > /dev/null 2>&1")
     print("Built.")
     print("Analyzing suggested fixes...")
     fixes_file = open(out_dir + "/fixes.json")
@@ -82,10 +82,10 @@ def pre():
 def diagnose():
     print("Started diagnose task...")
     print("Making build command for project...")
-    command = '"cd ' + data['PROJECT_PATH'] + " && " + data['BUILD_COMMAND'] + '"'
-    print("Detected build command: " + command)
+    build_command = '"cd ' + data['PROJECT_PATH'] + " && " + data['BUILD_COMMAND'] + '"'
+    print("Detected build command: " + build_command)
     print("Diagnosing...")
-    os.system("cd jars && java -jar NullAwayAutoFixer.jar diagnose " + out_dir + "/fixes.json" + " " + command)
+    os.system("cd jars && java -jar NullAwayAutoFixer.jar diagnose " + out_dir + "/fixes.json" + " " + build_command)
     print("Finsihed.")
 
 def apply():
