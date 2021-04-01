@@ -2,5 +2,5 @@
     "PROJECT_PATH": "/Users/nima/Developer/ArtifactEvaluation/NullAwayFixer/Projects/MPAndroidChart",
     "BUILD_COMMAND": "./gradlew build -x test",
     "FIX_PATH": "/tmp/NullAwayFix/fixes.json",
-    "INITIALIZE_ANNOT": "Initializer"
+    "INITIALIZE_ANNOT": "com.github.mikephil.Initializer"
 }
