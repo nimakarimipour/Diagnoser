@@ -1,6 +1,7 @@
 import os
 import sys
 import json
+import shutil
 
 f = open('config.json')
 data = json.load(f)
@@ -9,7 +10,8 @@ out_dir = "/tmp/NullAwayFix"
 
 if(len(sys.argv) != 2):
     raise ValueError("Needs one argument to run: diagnose/apply/pre/deep/clean")
-os.makedirs(out_dir)
+if not os.path.exists(out_dir):
+    os.makedirs(out_dir)
 
 def delete(file):
     try:
@@ -110,6 +112,12 @@ elif(command == "apply"):
     apply()
 elif(command == "clean"):
     clean()
+    delete_folder = input("Delete " +  out_dir + " directory too ? (y/n)\n")
+    if(delete_folder.lower() in ["yes", "y"]):
+        try:
+            shutil.rmtree(out_dir)
+        except:
+            print("Failed to remove directory: " + out_dir) 
 elif(command == "deep"):
     pass
 
