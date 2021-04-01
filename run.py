@@ -5,10 +5,11 @@ import json
 f = open('config.json')
 data = json.load(f)
 command = "cd " + data['PROJECT_PATH'] + " && " + data['BUILD_COMMAND']
-fixes_dir = data['FIX_PATH'][0: data['FIX_PATH'].rindex("/")] if "/" in data['FIX_PATH'] else "/"
+out_dir = "/tmp/NullAwayFix"
 
 if(len(sys.argv) != 2):
     raise ValueError("Needs one argument to run: diagnose/apply/pre/deep/clean")
+os.makedirs(out_dir)
 
 def delete(file):
     try:
@@ -18,27 +19,27 @@ def delete(file):
 
 def clean():
     print("Cleaning...")
-    delete(fixes_dir + "/diagnose_report.json")
-    delete(fixes_dir + "/fixes.json")
-    delete(fixes_dir + "/diagnose.json")
-    delete(fixes_dir + "/cleaned.json")
-    delete(fixes_dir + "/init_methods.json")
-    delete(fixes_dir + "/method_info.json")
-    delete(fixes_dir + "/diagnosed.json")
+    delete(out_dir + "/diagnose_report.json")
+    delete(out_dir + "/fixes.json")
+    delete(out_dir + "/diagnose.json")
+    delete(out_dir + "/cleaned.json")
+    delete(out_dir + "/init_methods.json")
+    delete(out_dir + "/method_info.json")
+    delete(out_dir + "/diagnosed.json")
     print("Finished.")
 
 def pre():
     print("Started preprocessing task...")
     print("Removing old files...")
-    method_path = fixes_dir + "/method_info.json"
+    method_path = out_dir + "/method_info.json"
     delete(method_path)
-    delete(fixes_dir + "/init_methods.json")
+    delete(out_dir + "/init_methods.json")
     print("Removed.")
     print("Building project...")
     os.system(command + " > /dev/null 2>&1")
     print("Built.")
     print("Analyzing suggested fixes...")
-    fixes_file = open(data['FIX_PATH'])
+    fixes_file = open(out_dir + "/fixes.json")
     fixes = json.load(fixes_file)
     print("Deecting uninitialized class fields...")
     field_no_inits = [x for x in fixes['fixes'] if (x['reason'] == 'FIELD_NO_INIT' and x['location'] == 'CLASS_FIELD')]
@@ -69,11 +70,11 @@ def pre():
                 init_methods['fixes'].append(candidate_method)
             else:
                 print("Already chosen.")
-    with open(fixes_dir + "/init_methods.json", 'w') as outfile:
+    with open(out_dir + "/init_methods.json", 'w') as outfile:
         json.dump(init_methods, outfile)
     print("Finished detecting methods.")
     print("Passing to injector to annotate...")
-    os.system("cd jars && java -jar NullAwayAutoFixer.jar apply " + fixes_dir + "/init_methods.json")
+    os.system("cd jars && java -jar NullAwayAutoFixer.jar apply " + out_dir + "/init_methods.json")
     print("Annotated.\nFinished.")
 
 def diagnose():
@@ -82,22 +83,22 @@ def diagnose():
     command = '"cd ' + data['PROJECT_PATH'] + " && " + data['BUILD_COMMAND'] + '"'
     print("Detected build command: " + command)
     print("Diagnosing...")
-    os.system("cd jars && java -jar NullAwayAutoFixer.jar diagnose " + data['FIX_PATH'] + " " + command)
+    os.system("cd jars && java -jar NullAwayAutoFixer.jar diagnose " + out_dir + "/fixes.json" + " " + command)
     print("Finsihed.")
 
 def apply():
-    delete(fixes_dir + "/cleaned.json")
+    delete(out_dir + "/cleaned.json")
     print("Analyzing diagnose report...")
-    report_file = open(fixes_dir + "/diagnose_report.json")
+    report_file = open(out_dir + "/diagnose_report.json")
     reports = json.load(report_file)
     cleaned = {}
     print("Selecting effective fixes...")
     cleaned['fixes'] = [fix for fix in reports['reports'] if fix['jump'] < 0]
     print("Selected effective fixes.")
-    with open(fixes_dir + "/cleaned.json", 'w') as outfile:
+    with open(out_dir + "/cleaned.json", 'w') as outfile:
         json.dump(cleaned, outfile)
-    print("Applying fixes at location: " + fixes_dir + "/cleaned.json")
-    os.system("cd jars && java -jar NullAwayAutoFixer.jar apply " + fixes_dir + "/cleaned.json")
+    print("Applying fixes at location: " + out_dir + "/cleaned.json")
+    os.system("cd jars && java -jar NullAwayAutoFixer.jar apply " + out_dir + "/cleaned.json")
 
 
 command = sys.argv[1]
@@ -111,7 +112,6 @@ elif(command == "clean"):
     clean()
 elif(command == "deep"):
     pass
-
 
 else:
     raise ValueError("Unknown command.")
