@@ -8,15 +8,17 @@ command = "cd " + data['PROJECT_PATH'] + " && " + data['BUILD_COMMAND']
 fixes_dir = data['FIX_PATH'][0: data['FIX_PATH'].rindex("/")] if "/" in data['FIX_PATH'] else "/"
 
 
-if(len(sys.argv) != 1):
+if(len(sys.argv) != 2):
     raise ValueError("Needs one argument to run: diagnose/apply/pre")
-arg = sys.argv[0]
+arg = sys.argv[1]
 if(arg == "pre"):
+    method_path = fixes_dir + "/method_info.json"
+    os.remove(method_path)
+    os.remove(fixes_dir + "/init_methods.json")
     os.system(command)
     fixes_file = open(data['FIX_PATH'])
     fixes = json.load(fixes_file)
     field_no_inits = [x for x in fixes['fixes'] if (x['reason'] == 'FIELD_NO_INIT' and x['location'] == 'CLASS_FIELD')]
-    method_path = fixes_dir + "/method_info.json"
     methods = json.load(open(method_path))
     init_methods = []
     for field in field_no_inits:
@@ -32,7 +34,8 @@ if(arg == "pre"):
             candidate_method['location'] = "METHOD_RETURN"
             candidate_method['inject'] = True
             candidate_method['annotation'] = data['INITIALIZE_ANNOT']
-            init_methods.append(candidate_method)
+            if(candidate_method not in init_methods):
+                init_methods.append(candidate_method)
     with open(fixes_dir + "/init_methods.json", 'w') as outfile:
         json.dump(init_methods, outfile)
     print("FINISHED")
