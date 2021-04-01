@@ -95,7 +95,7 @@ def apply():
     reports = json.load(report_file)
     cleaned = {}
     print("Selecting effective fixes...")
-    cleaned['fixes'] = [fix for fix in reports['reports'] if fix['jump'] < 0]
+    cleaned['fixes'] = [fix for fix in reports['reports'] if fix['jump'] < 1]
     print("Selected effective fixes.")
     with open(out_dir + "/cleaned.json", 'w') as outfile:
         json.dump(cleaned, outfile)
