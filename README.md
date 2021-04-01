@@ -52,7 +52,7 @@ tasks.withType(JavaCompile) {
                                               "-XepOpt:NullAway:AnnotatedPackages=",
                                               //Autofix flag must be set to true
                                               "-XepOpt:NullAway:AutoFix=true",
-                                              //Annotation to add to code [@Nonnull:@Nullable]
+                                              //Annotation to add to code [@Nonnull,@Nullable]
                                               "-XepOpt:NullAway:FixAnnotations=androidx.annotation.NonNull,androidx.annotation.Nullable",
                                               "-XepDisableAllWarnings"]
         options.compilerArgs << "-Xmaxerrs" << "100000"
