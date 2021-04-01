@@ -13,11 +13,22 @@ def delete(file):
     except OSError:
         pass    
 
+def clean():
+    print("Cleaning...")
+    delete(fixes_dir + "/diagnose_report.json")
+    delete(fixes_dir + "/fixes.json")
+    delete(fixes_dir + "/diagnose.json")
+    delete(fixes_dir + "/cleaned.json")
+    delete(fixes_dir + "/init_methods.json")
+    delete(fixes_dir + "/method_info.json")
+    print("Finished.")
+
 if(len(sys.argv) != 2):
-    raise ValueError("Needs one argument to run: diagnose/apply/pre")
+    raise ValueError("Needs one argument to run: diagnose/apply/pre/clean")
 arg = sys.argv[1]
 
 if(arg == "pre"):
+    print("Started preprocessing task...")
     print("Removing old files...")
     method_path = fixes_dir + "/method_info.json"
     delete(method_path)
@@ -66,9 +77,28 @@ if(arg == "pre"):
     print("Annotated.\nFinished.")
 
 elif(arg == "diagnose"):
+    print("Started diagnose task...")
+    print("Making build command for project...")
     command = '"cd ' + data['PROJECT_PATH'] + " && " + data['BUILD_COMMAND'] + '"'
+    print("Detected build command: " + command)
+    print("Diagnosing...")
     os.system("cd jars && java -jar NullAwayAutoFixer.jar diagnose " + data['FIX_PATH'] + " " + command)
-    print("FINISHED")
-elif(arg == "apply"):
-    os.system("cd jars && java -jar NullAwayAutoFixer.jar apply " + fixes_dir + "/diagnose_report.json")
+    print("Finsihed.")
 
+elif(arg == "apply"):
+    clean()
+    print("Analyzing diagnose report...")
+    fixes_file = open(fixes_dir + "/diagnose_report.json")
+    fixes = json.load(fixes_file)
+    cleaned = []
+    print("Selecting effective fixes...")
+    cleaned['fixes'] = [fix for fix in fixes['fixes'] if fix['jump'] < 0]
+    print("Selected effective fixes.")
+    with open(fixes_dir + "/cleaned.json", 'w') as outfile:
+        json.dump(cleaned, outfile)
+    print("Applying fixes at location: " + fixes_dir + "/cleaned.json")
+    os.system("cd jars && java -jar NullAwayAutoFixer.jar apply " + fixes_dir + "/cleaned.json")
+
+elif(arg == "clean"):
+    clean()
+    

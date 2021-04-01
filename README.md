@@ -85,11 +85,13 @@ Run the following command to execute the diagnose task. To run the script a comm
 1. `diagnose`: It will make `diagnose_report.json` file which is the result of analyizing all fixes comming from `NullAway`
 2. `pre`: It will perform a preprocessing phase which adds `@Initialize` annotation to all initializer method detected by `NullAway`.
 3. `apply`: It will apply all the effective fixes reported in `diagnose_report.json` which reduces the number or errors.
+4. `clean`: It will clean all genereted files.
 
 ```python
 python run.py pre
 python run.py diagnose
 python run.py apply
+python run.py clean
 ```
 
 ## Output
