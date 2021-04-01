@@ -81,7 +81,7 @@ Below is the description of each setting:
 Before running, please make sure that all the changes in the `setup` section has been applied to the target project.
 
 The script is written in python in the file `run.py`. It needs the `NullAwayAutoFixer.jar` file to execute at the relative path: `./jars/NulAwayAutoFixer.jar` just like the structure in this repo.
-Run the following command to execute the diagnose task. To run the script a command must be passed to the script. A command must be one of the following:
+To run the script a `command` must be passed to the script. A `command` must be one of the followings:
 1. `diagnose`: It will make `diagnose_report.json` file which is the result of analyizing all fixes comming from `NullAway`
 2. `pre`: It will perform a preprocessing phase which adds `@Initialize` annotation to all initializer method detected by `NullAway`.
 3. `apply`: It will apply all the effective fixes reported in `diagnose_report.json` which reduces the number or errors.
