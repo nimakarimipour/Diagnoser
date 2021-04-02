@@ -9,9 +9,7 @@ build_command = "cd " + data['PROJECT_PATH'] + " && " + data['BUILD_COMMAND']
 out_dir = "/tmp/NullAwayFix"
 
 if(len(sys.argv) != 2):
-    raise ValueError("Needs one argument to run: diagnose/apply/pre/deep/clean")
-if not os.path.exists(out_dir):
-    os.makedirs(out_dir)
+    raise ValueError("Needs one argument to run: diagnose/apply/pre/loop/clean")
 
 def delete(file):
     try:
@@ -29,6 +27,12 @@ def clean():
     delete(out_dir + "/method_info.json")
     delete(out_dir + "/diagnosed.json")
     print("Finished.")
+
+def prepare():
+    if not os.path.exists(out_dir):
+        os.makedirs(out_dir)
+    f = open(out_dir + "/diagnosed.json", "w")
+    json.dump(data, f)
 
 def pre():
     print("Started preprocessing task...")
@@ -79,13 +83,14 @@ def pre():
     os.system("cd jars && java -jar NullAwayAutoFixer.jar apply " + out_dir + "/init_methods.json")
     print("Annotated.\nFinished.")
 
-def diagnose():
+def diagnose(optimized):
+    optimized = "true" if optimized else "false"
     print("Started diagnose task...")
     print("Making build command for project...")
     build_command = '"cd ' + data['PROJECT_PATH'] + " && " + data['BUILD_COMMAND'] + '"'
     print("Detected build command: " + build_command)
     print("Diagnosing...")
-    os.system("cd jars && java -jar NullAwayAutoFixer.jar diagnose " + out_dir + "/fixes.json" + " " + build_command)
+    os.system("cd jars && java -jar NullAwayAutoFixer.jar diagnose " + out_dir + " " + build_command + " " + optimized)
     print("Finsihed.")
 
 def apply():
@@ -104,10 +109,11 @@ def apply():
 
 
 command = sys.argv[1]
+prepare()
 if(command == "pre"):
     pre()
 elif(command == "diagnose"):
-    diagnose()
+    diagnose(False)
 elif(command == "apply"):
     apply()
 elif(command == "clean"):
@@ -118,9 +124,32 @@ elif(command == "clean"):
             shutil.rmtree(out_dir)
         except:
             print("Failed to remove directory: " + out_dir) 
-elif(command == "deep"):
-    pass
 
+elif(command == "loop"):
+    print("Executing loop command")
+    finished = False
+    while(not finished):
+        print("Executing (optimized) diagnose task...")
+        diagnose(True)
+        print("Diagnsoe task finished, applying effective fixes...")
+        apply()
+        print("Applied.")
+        print("Adding diagnosed fixes to history.")
+        new_fixes_file = open(out_dir + "/diagnose.json")
+        new_fixes = json.load(new_fixes_file)
+        old_fixes_file = open(out_dir + "/diagnosed.json")
+        old_fixes = json.load(new_fixes_file)
+        old_size = len(old_fixes['fixes'])
+        old_fixes['fixes'].append(new_fixes['fixes'])
+        new_size = len(old_fixes['fixes'])
+        print("Fished adding diagnosed fixes to history.")
+        with open(out_dir + "/diagnosed.json", 'w') as outfile:
+            json.dump(old_fixes, outfile)
+        if(new_size == old_size):
+            finished = True
+            print("No changes, shutting down.")
+        else:
+            print("Getting ready for next round...")
 else:
     raise ValueError("Unknown command.")
     
