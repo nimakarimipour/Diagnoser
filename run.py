@@ -139,7 +139,7 @@ elif(command == "loop"):
         new_fixes_file = open(out_dir + "/diagnose.json")
         new_fixes = json.load(new_fixes_file)
         old_fixes_file = open(out_dir + "/diagnosed.json")
-        old_fixes = json.load(new_fixes_file)
+        old_fixes = json.load(old_fixes_file)
         old_size = len(old_fixes['fixes'])
         old_fixes['fixes'].append(new_fixes['fixes'])
         new_size = len(old_fixes['fixes'])
