@@ -84,6 +84,7 @@ To run the script a `command` must be passed to the script. A `command` must be 
 2. `pre`: It will perform a preprocessing phase which adds `@Initialize` annotation to all initializer methods detected by `NullAway`.
 3. `apply`: It will apply all the effective fixes reported in `diagnose_report.json` which reduces the number or errors.
 4. `clean`: It will clean all genereted files.
+5. `loop`: It will run `diagnose`/`apply` in iterations, until no further new fix is suggested.
 
 ```python
 python run.py pre
