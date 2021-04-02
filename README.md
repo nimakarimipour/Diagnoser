@@ -87,10 +87,11 @@ To run the script a `command` must be passed to the script. A `command` must be 
 5. `loop`: It will run `diagnose`/`apply` in iterations, until no further new fix is suggested.
 
 ```python
-python run.py pre
-python run.py diagnose
-python run.py apply
-python run.py clean
+python3 run.py pre
+python3 run.py diagnose
+python3 run.py apply
+python3 run.py clean
+python3 run.py loop
 ```
 
 ## Output
