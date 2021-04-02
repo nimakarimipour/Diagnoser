@@ -76,7 +76,7 @@ Below is the description of each setting:
 4. `INITIALIZE_ANNOT`: Fully qualified name of the `Initializer` annotation to inject on detected initializer methods.
 ## Run
 ---
-Before running, please make sure that all the changes in the `setup` section has been applied to the target project.
+Before running, please make sure that all the changes in the `Requirements for Target Project` section has been applied to the target project.
 
 The script is written in `python3` in the file `run.py`. It needs the `NullAwayAutoFixer.jar` file to execute at the relative path: `./jars/NulAwayAutoFixer.jar` just like the structure in this repo.
 To run the script a `command` must be passed to the script. A `command` must be one of the followings:
