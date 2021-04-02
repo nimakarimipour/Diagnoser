@@ -32,7 +32,8 @@ def prepare():
     if not os.path.exists(out_dir):
         os.makedirs(out_dir)
     f = open(out_dir + "/diagnosed.json", "w")
-    json.dump(data, f)
+    empty = {"fixes": []}
+    json.dump(empty, f)
 
 def pre():
     print("Started preprocessing task...")
