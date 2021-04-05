@@ -141,7 +141,9 @@ elif(command == "loop"):
         old_fixes_file = open(out_dir + "/diagnosed.json")
         old_fixes = json.load(old_fixes_file)
         old_size = len(old_fixes['fixes'])
-        old_fixes['fixes'].append(new_fixes['fixes'])
+        for fix in new_fixes['fixes']:
+            if fix not in old_fixes['fixes']:
+                old_fixes['fixes'].append(fix)
         new_size = len(old_fixes['fixes'])
         print("Fished adding diagnosed fixes to history.")
         with open(out_dir + "/diagnosed.json", 'w') as outfile:
