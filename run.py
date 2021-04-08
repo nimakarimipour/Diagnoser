@@ -125,7 +125,12 @@ elif(command == "clean"):
             shutil.rmtree(out_dir)
         except:
             print("Failed to remove directory: " + out_dir) 
-
+elif(command == "reset"):
+    clean()
+    try:
+        shutil.rmtree(out_dir)
+    except:
+        print("Failed to remove directory: " + out_dir) 
 elif(command == "loop"):
     print("Executing loop command")
     finished = False
