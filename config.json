@@ -1,5 +1,5 @@
 {
-    "PROJECT_PATH": "/Users/nima/Developer/ArtifactEvaluation/NullAwayFixer/Projects/MPAndroidChart",
+    "PROJECT_PATH": "/tmp/projects/PhotoView",
     "BUILD_COMMAND": "./gradlew build -x test",
-    "INITIALIZE_ANNOT": "com.github.mikephil.Initializer"
+    "INITIALIZE_ANNOT": "com.github.chrisbanes.photoview.Initializer"
 }

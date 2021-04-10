@@ -17,7 +17,7 @@ def delete(file):
     except OSError:
         pass    
 
-def clean():
+def clean(full=True):
     print("Cleaning...")
     delete(out_dir + "/diagnose_report.json")
     delete(out_dir + "/fixes.json")
@@ -25,15 +25,14 @@ def clean():
     delete(out_dir + "/cleaned.json")
     delete(out_dir + "/init_methods.json")
     delete(out_dir + "/method_info.json")
-    delete(out_dir + "/diagnosed.json")
+    delete(out_dir + "/history.json")
+    if(full):
+        delete(out_dir + "/reports.json")
     print("Finished.")
 
 def prepare():
     if not os.path.exists(out_dir):
         os.makedirs(out_dir)
-    f = open(out_dir + "/diagnosed.json", "w")
-    empty = {"fixes": []}
-    json.dump(empty, f)
 
 def pre():
     print("Started preprocessing task...")
@@ -42,7 +41,7 @@ def pre():
     delete(method_path)
     delete(out_dir + "/init_methods.json")
     print("Removed.")
-    print("Building project...")
+    print("Building project...\n" + build_command)
     os.system(build_command + " > /dev/null 2>&1")
     print("Built.")
     print("Analyzing suggested fixes...")
@@ -108,6 +107,41 @@ def apply():
     print("Applying fixes at location: " + out_dir + "/cleaned.json")
     os.system("cd jars && java -jar NullAwayAutoFixer.jar apply " + out_dir + "/cleaned.json")
 
+def loop():
+    print("Executing loop command")
+    finished = False
+    while(not finished):
+        print("Executing (optimized) diagnose task...")
+        diagnose(True)
+        print("Diagnsoe task finished, applying effective fixes...")
+        apply()
+        print("Applied.")
+        print("Adding diagnosed fixes to history.")
+        new_fixes = json.load(open(out_dir + "/diagnose.json"))
+        old_fixes = json.load(open(out_dir + "/history.json"))
+        old_size = len(old_fixes['fixes'])
+        for fix in new_fixes['fixes']:
+            if fix not in old_fixes['fixes']:
+                old_fixes['fixes'].append(fix)
+        new_size = len(old_fixes['fixes'])
+        print("Fished adding diagnosed fixes to history.")
+        with open(out_dir + "/history.json", 'w') as outfile:
+            json.dump(old_fixes, outfile)
+            outfile.close()
+        new_reports = json.load(open(out_dir + "/diagnose_report.json"))
+        old_reports = json.load(open(out_dir + "/reports.json"))
+        for report in new_reports['reports']:
+            if report not in old_reports['reports']:
+                old_reports['reports'].append(report)
+        with open(out_dir + "/reports.json", 'w') as outfile:
+            json.dump(old_reports, outfile)
+            outfile.close()
+        if(new_size == old_size):
+            finished = True
+            print("No changes, shutting down.")
+        else:
+            print("Getting ready for next round...")
+    clean(full=False)
 
 command = sys.argv[1]
 prepare()
@@ -117,6 +151,17 @@ elif(command == "diagnose"):
     diagnose(False)
 elif(command == "apply"):
     apply()
+elif(command == "loop"):
+    clean()
+    history = open(out_dir + "/history.json", "w")
+    empty = {"fixes": []}
+    json.dump(empty, history)
+    history.close()
+    reports = open(out_dir + "/reports.json", "w")
+    empty = {"reports": []}
+    json.dump(empty, reports)
+    reports.close()
+    loop()
 elif(command == "clean"):
     clean()
     delete_folder = input("Delete " +  out_dir + " directory too ? (y/n)\n")
@@ -131,33 +176,7 @@ elif(command == "reset"):
         shutil.rmtree(out_dir)
     except:
         print("Failed to remove directory: " + out_dir) 
-elif(command == "loop"):
-    print("Executing loop command")
-    finished = False
-    while(not finished):
-        print("Executing (optimized) diagnose task...")
-        diagnose(True)
-        print("Diagnsoe task finished, applying effective fixes...")
-        apply()
-        print("Applied.")
-        print("Adding diagnosed fixes to history.")
-        new_fixes_file = open(out_dir + "/diagnose.json")
-        new_fixes = json.load(new_fixes_file)
-        old_fixes_file = open(out_dir + "/diagnosed.json")
-        old_fixes = json.load(old_fixes_file)
-        old_size = len(old_fixes['fixes'])
-        for fix in new_fixes['fixes']:
-            if fix not in old_fixes['fixes']:
-                old_fixes['fixes'].append(fix)
-        new_size = len(old_fixes['fixes'])
-        print("Fished adding diagnosed fixes to history.")
-        with open(out_dir + "/diagnosed.json", 'w') as outfile:
-            json.dump(old_fixes, outfile)
-        if(new_size == old_size):
-            finished = True
-            print("No changes, shutting down.")
-        else:
-            print("Getting ready for next round...")
+
 else:
     raise ValueError("Unknown command.")
     
