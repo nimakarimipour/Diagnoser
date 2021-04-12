@@ -67,13 +67,15 @@ Configurations are written inside the `config.json` file. Please find a sample b
 {
     "PROJECT_PATH": "/Users/nima/Developer/ArtifactEvaluation/NullAwayFixer/Projects/PhotoView",
     "BUILD_COMMAND": "./gradlew build -x test",
-    "INITIALIZE_ANNOT": "com.github.mikephil.Initializer"
+    "INITIALIZE_ANNOT": "com.github.mikephil.Initializer",
+    "FORMAT": ""
 }
 ```
 Below is the description of each setting:
-1. `PROJECT_PATH`: the path to the project directory (if a subproject needs to be analyzied, this path needs to point to the subproject not the root project)
-2. `BUILD_COMMAND`: the command to execute `NullAway` for the project at the path given in `PROJECT_PATH`. The script will use the command, `cd PROJECT_PATH && BUILD_COMMAND` to execute `NullAway`.
-4. `INITIALIZE_ANNOT`: Fully qualified name of the `Initializer` annotation to inject on detected initializer methods.
+1. `PROJECT_PATH`: The path to the project directory (if a subproject needs to be analyzied, this path needs to point to the subproject not the root project)
+2. `BUILD_COMMAND`: The command to execute `NullAway` for the project at the path given in `PROJECT_PATH`. The script will use the command, `cd PROJECT_PATH && BUILD_COMMAND` to execute `NullAway`.
+3. `INITIALIZE_ANNOT`: Fully qualified name of the `Initializer` annotation to inject on detected initializer methods.
+4. `FORMAT`: Task which automatically reformats the code. This command should be executed at the directory where `BUILD_COMMAND` is executed. Since some projects have checkstyle tasks, reformat task will be executed to pass checkstyles in consecutive builds.
 ## Run
 ---
 Before running, please make sure that all the changes in the `Requirements for Target Project` section has been applied to the target project.
