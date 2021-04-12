@@ -92,6 +92,8 @@ def diagnose(optimized):
     print("Diagnosing...")
     os.system("cd jars && java -jar NullAwayAutoFixer.jar diagnose " + out_dir + " " + build_command + " " + optimized)
     print("Finsihed.")
+    if(data['format'] != ""):
+        os.system("cd " + data['PROJECT_PATH'] + " && " + data['format'])
 
 def apply():
     delete(out_dir + "/cleaned.json")
