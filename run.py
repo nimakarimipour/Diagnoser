@@ -15,10 +15,13 @@ def delete(file):
     try:
         os.remove(file)
     except OSError:
-        pass    
+        pass 
+
+def uprint(message):
+    print(message, flush=True)   
 
 def clean(full=True):
-    print("Cleaning...")
+    uprint("Cleaning...")
     delete(out_dir + "/diagnose_report.json")
     delete(out_dir + "/fixes.json")
     delete(out_dir + "/diagnose.json")
@@ -28,39 +31,39 @@ def clean(full=True):
     delete(out_dir + "/history.json")
     if(full):
         delete(out_dir + "/reports.json")
-    print("Finished.")
+    uprint("Finished.")
 
 def prepare():
-    print("Diagnose:-In prepare...")
+    uprint("Diagnose:-In prepare...")
     if not os.path.exists(out_dir):
-        print("Creating out_dir...")
+        uprint("Creating out_dir...")
         os.makedirs(out_dir)
     else:
-        print("out_dir already exists.")
-    print("Diagnose:-In prepare finished.")
+        uprint("out_dir already exists.")
+    uprint("Diagnose:-In prepare finished.")
 
 def pre():
-    print("Started preprocessing task...")
-    print("Removing old files...")
+    uprint("Started preprocessing task...")
+    uprint("Removing old files...")
     method_path = out_dir + "/method_info.json"
     delete(method_path)
     delete(out_dir + "/init_methods.json")
-    print("Removed.")
-    print("Building project...\n" + build_command)
+    uprint("Removed.")
+    uprint("Building project...\n" + build_command)
     os.system(build_command + " > /dev/null 2>&1")
-    print("Built.")
-    print("Analyzing suggested fixes...")
+    uprint("Built.")
+    uprint("Analyzing suggested fixes...")
     fixes_file = open(out_dir + "/fixes.json")
     fixes = json.load(fixes_file)
-    print("Detecting uninitialized class fields...")
+    uprint("Detecting uninitialized class fields...")
     field_no_inits = [x for x in fixes['fixes'] if (x['reason'] == 'FIELD_NO_INIT' and x['location'] == 'CLASS_FIELD')]
-    print("found " + str(len(field_no_inits)) + "fields.")
-    print("Analyzing method infos...")
+    uprint("found " + str(len(field_no_inits)) + "fields.")
+    uprint("Analyzing method infos...")
     methods = json.load(open(method_path))
     init_methods = {"fixes": []}
-    print("Selecting appropriate method for each class field...")
+    uprint("Selecting appropriate method for each class field...")
     for field in field_no_inits:
-        print("Analyzing class field: " + field['param'])
+        uprint("Analyzing class field: " + field['param'])
         candidate_method = None
         max = 0
         for method in methods['infos']:
@@ -77,53 +80,53 @@ def pre():
             candidate_method['reason'] = "Initializer"
             candidate_method['pkg'] = ""
             if(candidate_method not in init_methods['fixes']):
-                print("Selected method: " + candidate_method['method'])
+                uprint("Selected method: " + candidate_method['method'])
                 init_methods['fixes'].append(candidate_method)
             else:
-                print("Already chosen.")
+                uprint("Already chosen.")
     with open(out_dir + "/init_methods.json", 'w') as outfile:
         json.dump(init_methods, outfile)
-    print("Finished detecting methods.")
-    print("Passing to injector to annotate...")
+    uprint("Finished detecting methods.")
+    uprint("Passing to injector to annotate...")
     os.system("cd jars && java -jar NullAwayAutoFixer.jar apply " + out_dir + "/init_methods.json")
-    print("Annotated.\nFinished.")
+    uprint("Annotated.\nFinished.")
 
 def diagnose(optimized):
     optimized = "true" if optimized else "false"
-    print("Started diagnose task...")
-    print("Making build command for project...")
+    uprint("Started diagnose task...")
+    uprint("Making build command for project...")
     build_command = '"cd ' + data['PROJECT_PATH'] + " && " + data['BUILD_COMMAND'] + '"'
-    print("Detected build command: " + build_command)
-    print("Diagnosing...")
+    uprint("Detected build command: " + build_command)
+    uprint("Diagnosing...")
     os.system("cd jars && java -jar NullAwayAutoFixer.jar diagnose " + out_dir + " " + build_command + " " + optimized)
-    print("Finsihed.")
+    uprint("Finsihed.")
     if(data['FORMAT'] != ""):
         os.system("cd " + data['PROJECT_PATH'] + " && " + data['format'])
 
 def apply():
     delete(out_dir + "/cleaned.json")
-    print("Analyzing diagnose report...")
+    uprint("Analyzing diagnose report...")
     report_file = open(out_dir + "/diagnose_report.json")
     reports = json.load(report_file)
     cleaned = {}
-    print("Selecting effective fixes...")
+    uprint("Selecting effective fixes...")
     cleaned['fixes'] = [fix for fix in reports['reports'] if fix['jump'] < 1]
-    print("Selected effective fixes.")
+    uprint("Selected effective fixes.")
     with open(out_dir + "/cleaned.json", 'w') as outfile:
         json.dump(cleaned, outfile)
-    print("Applying fixes at location: " + out_dir + "/cleaned.json")
+    uprint("Applying fixes at location: " + out_dir + "/cleaned.json")
     os.system("cd jars && java -jar NullAwayAutoFixer.jar apply " + out_dir + "/cleaned.json")
 
 def loop():
-    print("Executing loop command")
+    uprint("Executing loop command")
     finished = False
     while(not finished):
-        print("Executing (optimized) diagnose task...")
+        uprint("Executing (optimized) diagnose task...")
         diagnose(True)
-        print("Diagnsoe task finished, applying effective fixes...")
+        uprint("Diagnsoe task finished, applying effective fixes...")
         apply()
-        print("Applied.")
-        print("Adding diagnosed fixes to history.")
+        uprint("Applied.")
+        uprint("Adding diagnosed fixes to history.")
         new_fixes = json.load(open(out_dir + "/diagnose.json"))
         old_fixes = json.load(open(out_dir + "/history.json"))
         old_size = len(old_fixes['fixes'])
@@ -131,7 +134,7 @@ def loop():
             if fix not in old_fixes['fixes']:
                 old_fixes['fixes'].append(fix)
         new_size = len(old_fixes['fixes'])
-        print("Fished adding diagnosed fixes to history.")
+        uprint("Fished adding diagnosed fixes to history.")
         with open(out_dir + "/history.json", 'w') as outfile:
             json.dump(old_fixes, outfile)
             outfile.close()
@@ -145,9 +148,9 @@ def loop():
             outfile.close()
         if(new_size == old_size):
             finished = True
-            print("No changes, shutting down.")
+            uprint("No changes, shutting down.")
         else:
-            print("Getting ready for next round...")
+            uprint("Getting ready for next round...")
     clean(full=False)
 
 command = sys.argv[1]
@@ -176,13 +179,13 @@ elif(command == "clean"):
         try:
             shutil.rmtree(out_dir)
         except:
-            print("Failed to remove directory: " + out_dir) 
+            uprint("Failed to remove directory: " + out_dir) 
 elif(command == "reset"):
     clean()
     try:
         shutil.rmtree(out_dir)
     except:
-        print("Failed to remove directory: " + out_dir) 
+        uprint("Failed to remove directory: " + out_dir) 
 
 else:
     raise ValueError("Unknown command.")
