@@ -18,7 +18,8 @@ def delete(file):
         pass 
 
 def uprint(message):
-    print(message, flush=True)   
+    print(message, flush=True) 
+    sys.stdout.flush()  
 
 def clean(full=True):
     uprint("Cleaning...")
