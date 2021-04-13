@@ -31,8 +31,13 @@ def clean(full=True):
     print("Finished.")
 
 def prepare():
+    print("Diagnose:-In prepare...")
     if not os.path.exists(out_dir):
+        print("Creating out_dir...")
         os.makedirs(out_dir)
+    else:
+        print("out_dir already exists.")
+    print("Diagnose:-In prepare finished.")
 
 def pre():
     print("Started preprocessing task...")
@@ -47,7 +52,7 @@ def pre():
     print("Analyzing suggested fixes...")
     fixes_file = open(out_dir + "/fixes.json")
     fixes = json.load(fixes_file)
-    print("Deecting uninitialized class fields...")
+    print("Detecting uninitialized class fields...")
     field_no_inits = [x for x in fixes['fixes'] if (x['reason'] == 'FIELD_NO_INIT' and x['location'] == 'CLASS_FIELD')]
     print("found " + str(len(field_no_inits)) + "fields.")
     print("Analyzing method infos...")
