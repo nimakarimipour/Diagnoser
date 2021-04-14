@@ -111,7 +111,7 @@ def apply():
     reports = json.load(report_file)
     cleaned = {}
     uprint("Selecting effective fixes...")
-    cleaned['fixes'] = [fix for fix in reports['reports'] if fix['jump'] < 1]
+    cleaned['fixes'] = [fix for fix in reports['reports'] if fix['jump'] < 1 and (not fix['class'].endswith("BeanCurrentlyInCreationFailureAnalyzer"))]
     uprint("Selected effective fixes.")
     with open(out_dir + "/cleaned.json", 'w') as outfile:
         json.dump(cleaned, outfile)
