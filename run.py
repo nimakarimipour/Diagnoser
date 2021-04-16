@@ -30,6 +30,7 @@ def clean(full=True):
     delete(out_dir + "/init_methods.json")
     delete(out_dir + "/method_info.json")
     delete(out_dir + "/history.json")
+    delete(out_dir + "/errors.json")
     if(full):
         delete(out_dir + "/reports.json")
     uprint("Finished.")
