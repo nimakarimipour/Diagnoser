@@ -2,6 +2,7 @@ import os
 import sys
 import json
 import shutil
+from ast import literal_eval
 
 f = open('config.json')
 data = json.load(f)
@@ -28,7 +29,7 @@ def clean(full=True):
     delete(out_dir + "/diagnose.json")
     delete(out_dir + "/cleaned.json")
     delete(out_dir + "/init_methods.json")
-    delete(out_dir + "/method_info.json")
+    delete(out_dir + "/method_info.csv")
     delete(out_dir + "/history.json")
     delete(out_dir + "/errors.json")
     if(full):
@@ -44,10 +45,18 @@ def prepare():
         uprint("out_dir already exists.")
     uprint("Diagnose:-In prepare finished.")
 
+def read_method_metadata(path):
+    method_infos = []
+    with open(path) as fp:
+        for cnt, line in enumerate(fp):
+            infos = line.split("%*%")
+            fields = [] if infos[4] == "[]" else list(map(lambda x: x.strip(), infos[4][1:-1].split(",")))
+            method_info = {"method": infos[2], "class": infos[1], "uri": infos[5], "fields": fields}
+
 def pre():
     uprint("Started preprocessing task...")
     uprint("Removing old files...")
-    method_path = out_dir + "/method_info.json"
+    method_path = out_dir + "/method_info.csv"
     delete(method_path)
     delete(out_dir + "/init_methods.json")
     uprint("Removed.")
@@ -61,7 +70,7 @@ def pre():
     field_no_inits = [x for x in fixes['fixes'] if (x['reason'] == 'FIELD_NO_INIT' and x['location'] == 'CLASS_FIELD')]
     uprint("found " + str(len(field_no_inits)) + "fields.")
     uprint("Analyzing method infos...")
-    methods = json.load(open(method_path))
+    methods = read_method_metadata(method_path)
     init_methods = {"fixes": []}
     uprint("Selecting appropriate method for each class field...")
     for field in field_no_inits:
@@ -155,40 +164,44 @@ def loop():
             uprint("Getting ready for next round...")
     clean(full=False)
 
-command = sys.argv[1]
-prepare()
-if(command == "pre"):
-    pre()
-elif(command == "diagnose"):
-    diagnose(False)
-elif(command == "apply"):
-    apply()
-elif(command == "loop"):
-    clean()
-    history = open(out_dir + "/history.json", "w")
-    empty = {"fixes": []}
-    json.dump(empty, history)
-    history.close()
-    reports = open(out_dir + "/reports.json", "w")
-    empty = {"reports": []}
-    json.dump(empty, reports)
-    reports.close()
-    loop()
-elif(command == "clean"):
-    clean()
-    delete_folder = input("Delete " +  out_dir + " directory too ? (y/n)\n")
-    if(delete_folder.lower() in ["yes", "y"]):
-        try:
-            shutil.rmtree(out_dir)
-        except:
-            uprint("Failed to remove directory: " + out_dir) 
-elif(command == "reset"):
-    clean()
-    try:
-        shutil.rmtree(out_dir)
-    except:
-        uprint("Failed to remove directory: " + out_dir) 
 
-else:
-    raise ValueError("Unknown command.")
+read_method_metadata()
+
+
+# command = sys.argv[1]
+# prepare()
+# if(command == "pre"):
+#     pre()
+# elif(command == "diagnose"):
+#     diagnose(False)
+# elif(command == "apply"):
+#     apply()
+# elif(command == "loop"):
+#     clean()
+#     history = open(out_dir + "/history.json", "w")
+#     empty = {"fixes": []}
+#     json.dump(empty, history)
+#     history.close()
+#     reports = open(out_dir + "/reports.json", "w")
+#     empty = {"reports": []}
+#     json.dump(empty, reports)
+#     reports.close()
+#     loop()
+# elif(command == "clean"):
+#     clean()
+#     delete_folder = input("Delete " +  out_dir + " directory too ? (y/n)\n")
+#     if(delete_folder.lower() in ["yes", "y"]):
+#         try:
+#             shutil.rmtree(out_dir)
+#         except:
+#             uprint("Failed to remove directory: " + out_dir) 
+# elif(command == "reset"):
+#     clean()
+#     try:
+#         shutil.rmtree(out_dir)
+#     except:
+#         uprint("Failed to remove directory: " + out_dir) 
+
+# else:
+#     raise ValueError("Unknown command.")
     
