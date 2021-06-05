@@ -1,1 +1,6 @@
-{"PROJECT_PATH": "/tmp/projects/libgdx", "BUILD_COMMAND": "./gradlew gdx:build -x test", "INITIALIZE_ANNOT": "com.badlogic.gdx.Initializer", "FORMAT": ""}
+{
+    "PROJECT_PATH": "/Users/nima/Desktop/libgdx",
+    "BUILD_COMMAND": "./gradlew gdx:build -x test",
+    "INITIALIZE_ANNOT": "com.badlogic.gdx.Initializer",
+    "FORMAT": ""
+}

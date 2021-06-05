@@ -51,7 +51,9 @@ def read_method_metadata(path):
         for cnt, line in enumerate(fp):
             infos = line.split("%*%")
             fields = [] if infos[4] == "[]" else list(map(lambda x: x.strip(), infos[4][1:-1].split(",")))
-            method_info = {"method": infos[2], "class": infos[1], "uri": infos[5], "fields": fields}
+            method_info = {"method": infos[2], "class": infos[1], "uri": infos[5].strip(), "fields": fields}
+            method_infos.append(method_info)
+    return method_infos
 
 def pre():
     uprint("Started preprocessing task...")
@@ -77,7 +79,7 @@ def pre():
         uprint("Analyzing class field: " + field['param'])
         candidate_method = None
         max = 0
-        for method in methods['infos']:
+        for method in methods:
             if(method['class'] == field['class']):
                 if(field['param'] in method['fields'] and len(method['fields']) > max):
                     candidate_method = method.copy()
@@ -165,43 +167,40 @@ def loop():
     clean(full=False)
 
 
-read_method_metadata()
+command = sys.argv[1]
+prepare()
+if(command == "pre"):
+    pre()
+elif(command == "diagnose"):
+    diagnose(False)
+elif(command == "apply"):
+    apply()
+elif(command == "loop"):
+    clean()
+    history = open(out_dir + "/history.json", "w")
+    empty = {"fixes": []}
+    json.dump(empty, history)
+    history.close()
+    reports = open(out_dir + "/reports.json", "w")
+    empty = {"reports": []}
+    json.dump(empty, reports)
+    reports.close()
+    loop()
+elif(command == "clean"):
+    clean()
+    delete_folder = input("Delete " +  out_dir + " directory too ? (y/n)\n")
+    if(delete_folder.lower() in ["yes", "y"]):
+        try:
+            shutil.rmtree(out_dir)
+        except:
+            uprint("Failed to remove directory: " + out_dir) 
+elif(command == "reset"):
+    clean()
+    try:
+        shutil.rmtree(out_dir)
+    except:
+        uprint("Failed to remove directory: " + out_dir) 
 
-
-# command = sys.argv[1]
-# prepare()
-# if(command == "pre"):
-#     pre()
-# elif(command == "diagnose"):
-#     diagnose(False)
-# elif(command == "apply"):
-#     apply()
-# elif(command == "loop"):
-#     clean()
-#     history = open(out_dir + "/history.json", "w")
-#     empty = {"fixes": []}
-#     json.dump(empty, history)
-#     history.close()
-#     reports = open(out_dir + "/reports.json", "w")
-#     empty = {"reports": []}
-#     json.dump(empty, reports)
-#     reports.close()
-#     loop()
-# elif(command == "clean"):
-#     clean()
-#     delete_folder = input("Delete " +  out_dir + " directory too ? (y/n)\n")
-#     if(delete_folder.lower() in ["yes", "y"]):
-#         try:
-#             shutil.rmtree(out_dir)
-#         except:
-#             uprint("Failed to remove directory: " + out_dir) 
-# elif(command == "reset"):
-#     clean()
-#     try:
-#         shutil.rmtree(out_dir)
-#     except:
-#         uprint("Failed to remove directory: " + out_dir) 
-
-# else:
-#     raise ValueError("Unknown command.")
+else:
+    raise ValueError("Unknown command.")
     
