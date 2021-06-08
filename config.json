@@ -1,6 +1,6 @@
 {
-    "PROJECT_PATH": "/Users/nima/Desktop/libgdx",
+    "PROJECT_PATH": "/Users/nima/Desktop/Fix",
     "BUILD_COMMAND": "./gradlew gdx:build -x test",
-    "INITIALIZE_ANNOT": "com.badlogic.gdx.Initializer",
+    "INITIALIZE_ANNOT": "com.uber.Initializer",
     "FORMAT": ""
 }
