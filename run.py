@@ -11,14 +11,21 @@ delimiter = "$*$"
 if(len(sys.argv) != 2):
     raise ValueError("Needs one argument to run: diagnose/apply/pre/loop/clean")
 
-EXPLORER_CONFIG = data = json.load(open('template.config'))
+EXPLORER_CONFIG = json.load(open('template.config'))
 
 
 def load_csv_to_dict(path):
-    file1 = open(path, 'r')
-    lines = file1.readlines()
-    for line in lines:
-        print("LINE: " + str(line))
+    ans = []
+    csvFile = open(path, 'r')
+    lines = csvFile.readlines()
+    keys = lines[0].strip().split(delimiter)
+    for line in lines[1:]:
+        item = {}
+        infos = line.strip().split(delimiter)
+        for i in range(0, len(keys)):
+            item[keys[i]] = infos[i]
+        ans.append(item)
+    return ans
 
 def make_explorer_config(config):
     with open('/tmp/NullAwayFix/explorer.config', 'w') as outfile:
@@ -61,7 +68,7 @@ def prepare():
 def pre():
     uprint("Started preprocessing task...")
     uprint("Removing old files...")
-    method_path = out_dir + "/method_info.json"
+    method_path = out_dir + "/method_info.csv"
     delete(method_path)
     delete(out_dir + "/init_methods.json")
     uprint("Removed.")
@@ -69,22 +76,23 @@ def pre():
     new_config = EXPLORER_CONFIG.copy()
     new_config['SUGGEST'] = True
     new_config['MAKE_METHOD_INHERITANCE_TREE'] = True
+    make_explorer_config(new_config)
     os.system(build_command + " > /dev/null 2>&1")
     uprint("Built.")
     uprint("Analyzing suggested fixes...")
     fixes = load_csv_to_dict(out_dir + "/fixes.csv")
     uprint("Detecting uninitialized class fields...")
-    field_no_inits = [x for x in fixes['fixes'] if (x['reason'] == 'FIELD_NO_INIT' and x['location'] == 'CLASS_FIELD')]
+    field_no_inits = [x for x in fixes if (x['reason'] == 'FIELD_NO_INIT' and x['location'] == 'CLASS_FIELD')]
     uprint("found " + str(len(field_no_inits)) + "fields.")
     uprint("Analyzing method infos...")
-    methods = json.load(open(method_path))
+    methods = load_csv_to_dict(method_path)
     init_methods = {"fixes": []}
     uprint("Selecting appropriate method for each class field...")
     for field in field_no_inits:
         uprint("Analyzing class field: " + field['param'])
         candidate_method = None
         max = 0 
-        for method in methods['infos']:
+        for method in methods:
             if(method['class'] == field['class']):
                 if(field['param'] in method['fields'] and len(method['fields']) > max):
                     candidate_method = method.copy()
