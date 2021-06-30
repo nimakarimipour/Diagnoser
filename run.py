@@ -2,15 +2,28 @@ import os
 import sys
 import json
 import shutil
-from ast import literal_eval
 
-f = open('config.json')
-data = json.load(f)
+data = json.load(open('config.json'))
 build_command = "cd " + data['PROJECT_PATH'] + " && " + data['BUILD_COMMAND']
 out_dir = "/tmp/NullAwayFix"
+delimiter = "$*$"
 
 if(len(sys.argv) != 2):
     raise ValueError("Needs one argument to run: diagnose/apply/pre/loop/clean")
+
+EXPLORER_CONFIG = data = json.load(open('template.config'))
+
+
+def load_csv_to_dict(path):
+    file1 = open(path, 'r')
+    lines = file1.readlines()
+    for line in lines:
+        print("LINE: " + str(line))
+
+def make_explorer_config(config):
+    with open('/tmp/NullAwayFix/explorer.config', 'w') as outfile:
+        json.dump(config, outfile)
+
 
 def delete(file):
     try:
@@ -29,7 +42,7 @@ def clean(full=True):
     delete(out_dir + "/diagnose.json")
     delete(out_dir + "/cleaned.json")
     delete(out_dir + "/init_methods.json")
-    delete(out_dir + "/method_info.csv")
+    delete(out_dir + "/method_info.json")
     delete(out_dir + "/history.json")
     delete(out_dir + "/errors.json")
     if(full):
@@ -45,41 +58,33 @@ def prepare():
         uprint("out_dir already exists.")
     uprint("Diagnose:-In prepare finished.")
 
-def read_method_metadata(path):
-    method_infos = []
-    with open(path) as fp:
-        for cnt, line in enumerate(fp):
-            infos = line.split("%*%")
-            fields = [] if infos[4] == "[]" else list(map(lambda x: x.strip(), infos[4][1:-1].split(",")))
-            method_info = {"method": infos[2], "class": infos[1], "uri": infos[5].strip(), "fields": fields}
-            method_infos.append(method_info)
-    return method_infos
-
 def pre():
     uprint("Started preprocessing task...")
     uprint("Removing old files...")
-    method_path = out_dir + "/method_info.csv"
+    method_path = out_dir + "/method_info.json"
     delete(method_path)
     delete(out_dir + "/init_methods.json")
     uprint("Removed.")
     uprint("Building project...\n" + build_command)
+    new_config = EXPLORER_CONFIG.copy()
+    new_config['SUGGEST'] = True
+    new_config['MAKE_METHOD_INHERITANCE_TREE'] = True
     os.system(build_command + " > /dev/null 2>&1")
     uprint("Built.")
     uprint("Analyzing suggested fixes...")
-    fixes_file = open(out_dir + "/fixes.json")
-    fixes = json.load(fixes_file)
+    fixes = load_csv_to_dict(out_dir + "/fixes.csv")
     uprint("Detecting uninitialized class fields...")
     field_no_inits = [x for x in fixes['fixes'] if (x['reason'] == 'FIELD_NO_INIT' and x['location'] == 'CLASS_FIELD')]
     uprint("found " + str(len(field_no_inits)) + "fields.")
     uprint("Analyzing method infos...")
-    methods = read_method_metadata(method_path)
+    methods = json.load(open(method_path))
     init_methods = {"fixes": []}
     uprint("Selecting appropriate method for each class field...")
     for field in field_no_inits:
         uprint("Analyzing class field: " + field['param'])
         candidate_method = None
-        max = 0
-        for method in methods:
+        max = 0 
+        for method in methods['infos']:
             if(method['class'] == field['class']):
                 if(field['param'] in method['fields'] and len(method['fields']) > max):
                     candidate_method = method.copy()
@@ -165,7 +170,6 @@ def loop():
         else:
             uprint("Getting ready for next round...")
     clean(full=False)
-
 
 command = sys.argv[1]
 prepare()

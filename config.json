@@ -1,6 +1,6 @@
 {
-    "PROJECT_PATH": "/Users/nima/Desktop/MPAndroidChart",
+    "PROJECT_PATH": "/Users/nima/Developer/NullAwayFixer/Projects/gson",
     "BUILD_COMMAND": "./gradlew build -x test",
-    "INITIALIZE_ANNOT": "com.github.mikephil.charting.Initializer",
+    "INITIALIZE_ANNOT": "com.google.gson.Initializer",
     "FORMAT": ""
 }
