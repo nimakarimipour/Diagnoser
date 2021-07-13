@@ -45,13 +45,13 @@ def uprint(message):
 def clean(full=True):
     uprint("Cleaning...")
     delete(out_dir + "/diagnose_report.json")
-    delete(out_dir + "/fixes.json")
+    delete(out_dir + "/fixes.csv")
     delete(out_dir + "/diagnose.json")
     delete(out_dir + "/cleaned.json")
     delete(out_dir + "/init_methods.json")
-    delete(out_dir + "/method_info.json")
+    delete(out_dir + "/method_info.csv")
     delete(out_dir + "/history.json")
-    delete(out_dir + "/errors.json")
+    delete(out_dir + "/errors.csv")
     if(full):
         delete(out_dir + "/reports.json")
     uprint("Finished.")
@@ -76,6 +76,9 @@ def pre():
     new_config = EXPLORER_CONFIG.copy()
     new_config['SUGGEST'] = True
     new_config['MAKE_METHOD_INHERITANCE_TREE'] = True
+    new_config['MAKE_CALL_GRAPH'] = True
+    new_config['LOG_ERROR']['ACTIVE'] = True
+    new_config['LOG_ERROR']['DEEP'] = True
     make_explorer_config(new_config)
     os.system(build_command + " > /dev/null 2>&1")
     uprint("Built.")
@@ -119,6 +122,11 @@ def pre():
 
 def diagnose(optimized):
     optimized = "true" if optimized else "false"
+    new_config = EXPLORER_CONFIG.copy()
+    new_config['SUGGEST'] = True
+    new_config['LOG_ERROR']['ACTIVE'] = True
+    new_config['LOG_ERROR']['DEEP'] = True
+    make_explorer_config(new_config)
     uprint("Started diagnose task...")
     uprint("Making build command for project...")
     build_command = '"cd ' + data['PROJECT_PATH'] + " && " + data['BUILD_COMMAND'] + '"'
@@ -189,6 +197,7 @@ elif(command == "apply"):
     apply()
 elif(command == "loop"):
     clean()
+    pre()
     history = open(out_dir + "/history.json", "w")
     empty = {"fixes": []}
     json.dump(empty, history)
