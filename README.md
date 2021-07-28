@@ -5,11 +5,11 @@ Script to run [AutoFixer](https://github.com/nimakarimipour/NullAwayAutoFixer) D
 ---
 ### Overview
 `Autofixer` depends on two projects shown below:
-1. [AnnotationInjector](https://github.com/nimakarimipour/AnnotationInjector): Used to inject suggested annotations to source code. It receives a path to `json` file where all the suggested fixes are written as an argument. The default location is `/tmp/NullAwayFix/fixes.json`
+1. [Injector](https://github.com/nimakarimipour/Injector): Used to inject suggested annotations to source code. It receives a path to `json` file where all the suggested fixes are written as an argument. The default location is `/tmp/NullAwayFix/fixes.json`
 2. [Customized NullAway](https://github.com/nimakarimipour/NullAway): A special version of `NullAway` with suggested fixes capability. It needs to be on `autofix` branch to have all the fix suggestions features available.
 
 ### Installation
-`AutoFixer` is delivered via a gradle plugin, and all those dependencies will be managed by gradle, However, In this repo, `AutoFixer` is provided via a `jar` file where all dependenceis related to `AnnotationInjector` are already handled. 
+`AutoFixer` is delivered via a gradle plugin, and all those dependencies will be managed by gradle, However, In this repo, `AutoFixer` is provided via a `jar` file where all dependenceis related to `Injector` are already handled. 
 To install the customized version of `NullAway` in `maven local` repository, please follow the instructions below:
 ```
 git clone https://github.com/nimakarimipour/NullAway
@@ -24,15 +24,26 @@ The customized version of `NullAway` will be installed at the following location
 edu.ucr.cs.riple:nullaway:0.7.12-SNAPSHOT
 ```
 
+### Build Jar
+The jar file in `jars` directory can be rebuilt by the following commands:
+
+```
+git clone git@github.com:nimakarimipour/Injector.git
+cd Injector
+./gradlew install
+cd ..
+git clone git@github.com:nimakarimipour/NullAwayAutoFixer.git
+cd NullAwayAutoFixer
+git checkout jar
+./gradlew fatJar
+```
 
 ## Requirements for Target Project
 ---
 The only requirement for a target project to run autofixer on is that it needs to work with the [customized](https://github.com/nimakarimipour/NullAway) version of `NullAway` mentioned in `Dependencies/Installation` rather than the original version.
-After that the original version of the `NullAway` is replaced by the customized version, the following flags must be sent to `NullAway` to activate the autofix features.
+After that the original version of the `NullAway` is replaced by the customized version, the following flag must be sent to `NullAway` to activate the autofix features.
 ```
 -XepOpt:NullAway:AutoFix=true
--XepOpt:NullAway:FixAnnotations=androidx.annotation.NonNull,androidx.annotation.Nullable
-//Default is javax.annotation.Nonnull,javax.annotation.Nullable
 ```
 
 Please find a sample project setup below:
@@ -51,11 +62,7 @@ tasks.withType(JavaCompile) {
                                               "-Xep:NullAway:ERROR",
                                               "-XepOpt:NullAway:AnnotatedPackages=",
                                               //Autofix flag must be set to true
-                                              "-XepOpt:NullAway:AutoFix=true",
-                                              //Annotation to add to code [@Nonnull,@Nullable]
-                                              "-XepOpt:NullAway:FixAnnotations=androidx.annotation.NonNull,androidx.annotation.Nullable",
-                                              "-XepDisableAllWarnings"]
-        options.compilerArgs << "-Xmaxerrs" << "100000"
+                                              "-XepOpt:NullAway:AutoFix=true"]
     }
 }
 ```
