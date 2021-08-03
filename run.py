@@ -2,6 +2,7 @@ import os
 import sys
 import json
 import shutil
+import time
 
 data = json.load(open('config.json'))
 build_command = "cd " + data['PROJECT_PATH'] + " && " + data['BUILD_COMMAND']
@@ -207,7 +208,10 @@ elif(command == "loop"):
     empty = {"reports": []}
     json.dump(empty, reports)
     reports.close()
+    start = time.time()
     loop()
+    end = time.time()
+    print("Elapsed time in seconds: " + str(end - start))
 elif(command == "clean"):
     clean()
     delete_folder = input("Delete " +  out_dir + " directory too ? (y/n)\n")

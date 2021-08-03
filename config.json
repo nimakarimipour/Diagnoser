@@ -1,6 +1,6 @@
 {
-    "PROJECT_PATH": "/Users/nima/Developer/NullAwayFixer/Projects/mockito",
-    "BUILD_COMMAND": "./gradlew build -x test",
-    "INITIALIZE_ANNOT": "org.mockito.Initializer",
+    "PROJECT_PATH": "/Users/nima/Developer/NullAwayFixer/Projects/libgdx",
+    "BUILD_COMMAND": "./gradlew gdx:build -x test",
+    "INITIALIZE_ANNOT": "com.badlogic.gdx.Initializer",
     "FORMAT": ""
 }
