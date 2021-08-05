@@ -187,6 +187,7 @@ def loop():
             uprint("No changes, shutting down.")
         else:
             uprint("Getting ready for next round...")
+        finished = True
     clean(full=False)
 
 command = sys.argv[1]
