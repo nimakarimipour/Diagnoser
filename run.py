@@ -75,7 +75,7 @@ def pre():
     uprint("Removed.")
     uprint("Building project...\n" + build_command)
     new_config = EXPLORER_CONFIG.copy()
-    new_config['SUGGEST'] = True
+    new_config['SUGGEST']['ACTIVE'] = True
     new_config['MAKE_METHOD_INHERITANCE_TREE'] = True
     new_config['MAKE_CALL_GRAPH'] = True
     new_config['MAKE_FIELD_GRAPH'] = True
@@ -125,7 +125,7 @@ def pre():
 def diagnose(optimized):
     optimized = "true" if optimized else "false"
     new_config = EXPLORER_CONFIG.copy()
-    new_config['SUGGEST'] = True
+    new_config['SUGGEST']['ACTIVE'] = True
     new_config['LOG_ERROR']['ACTIVE'] = True
     new_config['LOG_ERROR']['DEEP'] = True
     make_explorer_config(new_config)
