@@ -8,6 +8,7 @@ data = json.load(open('config.json'))
 build_command = "cd " + data['PROJECT_PATH'] + " && " + data['BUILD_COMMAND']
 out_dir = "/tmp/NullAwayFix"
 delimiter = "$*$"
+depth = 0
 
 if(len(sys.argv) != 2):
     raise ValueError("Needs one argument to run: diagnose/apply/pre/loop/clean")
@@ -134,7 +135,7 @@ def diagnose(optimized):
     build_command = '"cd ' + data['PROJECT_PATH'] + " && " + data['BUILD_COMMAND'] + '"'
     uprint("Detected build command: " + build_command)
     uprint("Diagnosing...")
-    os.system("cd jars && java -jar NullAwayAutoFixer.jar diagnose " + out_dir + " " + build_command + " " + optimized)
+    os.system("cd jars && java -jar NullAwayAutoFixer.jar diagnose " + out_dir + " " + build_command + " " + str(depth) + " " + optimized)
     uprint("Finsihed.")
     if(data['FORMAT'] != ""):
         os.system("cd " + data['PROJECT_PATH'] + " && " + data['format'])
@@ -187,6 +188,7 @@ def loop():
             uprint("No changes, shutting down.")
         else:
             uprint("Getting ready for next round...")
+        finished = True
     clean(full=False)
 
 command = sys.argv[1]
