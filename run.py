@@ -8,7 +8,7 @@ data = json.load(open('config.json'))
 build_command = "cd " + data['PROJECT_PATH'] + " && " + data['BUILD_COMMAND']
 out_dir = "/tmp/NullAwayFix"
 delimiter = "$*$"
-depth = 0
+depth = 10
 
 if(len(sys.argv) != 2):
     raise ValueError("Needs one argument to run: diagnose/apply/pre/loop/clean")
