@@ -8,7 +8,7 @@ data = json.load(open('config.json'))
 build_command = "cd " + data['PROJECT_PATH'] + " && " + data['BUILD_COMMAND']
 out_dir = "/tmp/NullAwayFix"
 delimiter = "$*$"
-depth = 10
+
 
 if(len(sys.argv) != 2):
     raise ValueError("Needs one argument to run: diagnose/apply/pre/loop/clean")
@@ -82,6 +82,8 @@ def pre():
     new_config['MAKE_FIELD_GRAPH'] = True
     new_config['LOG_ERROR']['ACTIVE'] = True
     new_config['LOG_ERROR']['DEEP'] = True
+    new_config['ANNOTATION']['NULLABLE'] = data['ANNOTATION']['NULLABLE']
+    new_config['ANNOTATION']['NONNULL'] = data['ANNOTATION']['NONNULL']
     make_explorer_config(new_config)
     os.system(build_command + " > /dev/null 2>&1")
     uprint("Built.")
@@ -107,7 +109,7 @@ def pre():
             del candidate_method['fields']
             candidate_method['location'] = "METHOD_RETURN"
             candidate_method['inject'] = True
-            candidate_method['annotation'] = data['INITIALIZE_ANNOT']
+            candidate_method['annotation'] = data['ANNOTATION']['INITIALIZE']
             candidate_method['param'] = ""
             candidate_method['reason'] = "Initializer"
             candidate_method['pkg'] = ""
@@ -129,13 +131,15 @@ def diagnose(optimized):
     new_config['SUGGEST']['ACTIVE'] = True
     new_config['LOG_ERROR']['ACTIVE'] = True
     new_config['LOG_ERROR']['DEEP'] = True
+    new_config['ANNOTATION']['NULLABLE'] = data['ANNOTATION']['NULLABLE']
+    new_config['ANNOTATION']['NONNULL'] = data['ANNOTATION']['NONNULL']
     make_explorer_config(new_config)
     uprint("Started diagnose task...")
     uprint("Making build command for project...")
     build_command = '"cd ' + data['PROJECT_PATH'] + " && " + data['BUILD_COMMAND'] + '"'
     uprint("Detected build command: " + build_command)
     uprint("Diagnosing...")
-    os.system("cd jars && java -jar NullAwayAutoFixer.jar diagnose " + out_dir + " " + build_command + " " + str(depth) + " " + optimized)
+    os.system("cd jars && java -jar NullAwayAutoFixer.jar diagnose " + out_dir + " " + build_command + " " + str(data['DEPTH']) + " " + data['ANNOTATION']['NULLABLE'] + " " + optimized)
     uprint("Finsihed.")
     if(data['FORMAT'] != ""):
         os.system("cd " + data['PROJECT_PATH'] + " && " + data['format'])
