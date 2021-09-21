@@ -38,7 +38,7 @@ def delete(file):
     try:
         os.remove(file)
     except OSError:
-        pass 
+        pass
 
 def uprint(message):
     print(message, flush=True) 
@@ -52,20 +52,14 @@ def clean(full=True):
     delete(out_dir + "/cleaned.json")
     delete(out_dir + "/init_methods.json")
     delete(out_dir + "/method_info.csv")
-    delete(out_dir + "/history.json")
     delete(out_dir + "/errors.csv")
     if(full):
         delete(out_dir + "/reports.json")
     uprint("Finished.")
 
 def prepare():
-    uprint("Diagnose:-In prepare...")
     if not os.path.exists(out_dir):
-        uprint("Creating out_dir...")
         os.makedirs(out_dir)
-    else:
-        uprint("out_dir already exists.")
-    uprint("Diagnose:-In prepare finished.")
 
 def pre():
     uprint("Started preprocessing task...")
@@ -97,7 +91,6 @@ def pre():
     init_methods = {"fixes": []}
     uprint("Selecting appropriate method for each class field...")
     for field in field_no_inits:
-        uprint("Analyzing class field: " + field['param'])
         candidate_method = None
         max = 0 
         for method in methods:
@@ -114,19 +107,15 @@ def pre():
             candidate_method['reason'] = "Initializer"
             candidate_method['pkg'] = ""
             if(candidate_method not in init_methods['fixes']):
-                uprint("Selected method: " + candidate_method['method'])
                 init_methods['fixes'].append(candidate_method)
-            else:
-                uprint("Already chosen.")
     with open(out_dir + "/init_methods.json", 'w') as outfile:
         json.dump(init_methods, outfile)
     uprint("Finished detecting methods.")
     uprint("Passing to injector to annotate...")
     os.system("cd jars && java -jar NullAwayAutoFixer.jar apply " + out_dir + "/init_methods.json")
-    uprint("Annotated.\nFinished.")
+    uprint("Annotated.")
 
-def diagnose(optimized):
-    optimized = "true" if optimized else "false"
+def diagnose():
     new_config = EXPLORER_CONFIG.copy()
     new_config['SUGGEST']['ACTIVE'] = True
     new_config['LOG_ERROR']['ACTIVE'] = True
@@ -139,7 +128,7 @@ def diagnose(optimized):
     build_command = '"cd ' + data['PROJECT_PATH'] + " && " + data['BUILD_COMMAND'] + '"'
     uprint("Detected build command: " + build_command)
     uprint("Diagnosing...")
-    os.system("cd jars && java -jar NullAwayAutoFixer.jar diagnose " + out_dir + " " + build_command + " " + str(data['DEPTH']) + " " + data['ANNOTATION']['NULLABLE'] + " " + optimized)
+    os.system("cd jars && java -jar NullAwayAutoFixer.jar diagnose " + out_dir + " " + build_command + " " + str(data['DEPTH']) + " " + data['ANNOTATION']['NULLABLE'])
     uprint("Finsihed.")
     if(data['FORMAT'] != ""):
         os.system("cd " + data['PROJECT_PATH'] + " && " + data['format'])
@@ -162,37 +151,24 @@ def loop():
     uprint("Executing loop command")
     finished = False
     while(not finished):
+        finished = True
         uprint("Executing (optimized) diagnose task...")
-        diagnose(True)
+        diagnose()
         uprint("Diagnsoe task finished, applying effective fixes...")
         apply()
         uprint("Applied.")
-        uprint("Adding diagnosed fixes to history.")
-        new_fixes = json.load(open(out_dir + "/diagnose.json"))
-        old_fixes = json.load(open(out_dir + "/history.json"))
-        old_size = len(old_fixes['fixes'])
-        for fix in new_fixes['fixes']:
-            if fix not in old_fixes['fixes']:
-                old_fixes['fixes'].append(fix)
-        new_size = len(old_fixes['fixes'])
-        uprint("Fished adding diagnosed fixes to history.")
-        with open(out_dir + "/history.json", 'w') as outfile:
-            json.dump(old_fixes, outfile)
-            outfile.close()
         new_reports = json.load(open(out_dir + "/diagnose_report.json"))
+        if(len(new_reports['reports']) == 0):
+            uprint("No changes, shutting down.")
+            break
         old_reports = json.load(open(out_dir + "/reports.json"))
         for report in new_reports['reports']:
             if report not in old_reports['reports']:
+                finished = False
                 old_reports['reports'].append(report)
         with open(out_dir + "/reports.json", 'w') as outfile:
             json.dump(old_reports, outfile)
             outfile.close()
-        if(new_size == old_size):
-            finished = True
-            uprint("No changes, shutting down.")
-        else:
-            uprint("Getting ready for next round...")
-        finished = True
     clean(full=False)
 
 command = sys.argv[1]
@@ -206,10 +182,6 @@ elif(command == "apply"):
 elif(command == "loop"):
     clean()
     pre()
-    history = open(out_dir + "/history.json", "w")
-    empty = {"fixes": []}
-    json.dump(empty, history)
-    history.close()
     reports = open(out_dir + "/reports.json", "w")
     empty = {"reports": []}
     json.dump(empty, reports)
