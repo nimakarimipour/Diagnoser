@@ -85,7 +85,7 @@ def pre():
     fixes = load_csv_to_dict(out_dir + "/fixes.csv")
     uprint("Detecting uninitialized class fields...")
     field_no_inits = [x for x in fixes if (x['reason'] == 'FIELD_NO_INIT' and x['location'] == 'CLASS_FIELD')]
-    uprint("found " + str(len(field_no_inits)) + "fields.")
+    uprint("found " + str(len(field_no_inits)) + " fields.")
     uprint("Analyzing method infos...")
     methods = load_csv_to_dict(method_path)
     init_methods = {"fixes": []}
@@ -176,7 +176,7 @@ prepare()
 if(command == "pre"):
     pre()
 elif(command == "diagnose"):
-    diagnose(False)
+    diagnose()
 elif(command == "apply"):
     apply()
 elif(command == "loop"):
