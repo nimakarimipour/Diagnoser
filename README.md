@@ -9,7 +9,7 @@ Script to run [AutoFixer](https://github.com/nimakarimipour/NullAwayAutoFixer) D
 2. [Customized NullAway](https://github.com/nimakarimipour/NullAway): A special version of `NullAway` with suggested fixes capability. It needs to be on `autofix` branch to have all the fix suggestions features available.
 
 ### Installation
-`AutoFixer` is delivered via a gradle plugin, and all those dependencies will be managed by gradle, However, In this repo, `AutoFixer` is provided via a `jar` file where all dependenceis related to `Injector` are already handled. 
+`AutoFixer` is provided via a `jar` file where all dependenceis related to `Injector` are already handled. 
 To install the customized version of `NullAway` in `maven local` repository, please follow the instructions below:
 ```
 git clone https://github.com/nimakarimipour/NullAway
@@ -34,7 +34,6 @@ cd Injector
 cd ..
 git clone git@github.com:nimakarimipour/NullAwayAutoFixer.git
 cd NullAwayAutoFixer
-git checkout jar
 ./gradlew fatJar
 ```
 
@@ -72,17 +71,26 @@ tasks.withType(JavaCompile) {
 Configurations are written inside the `config.json` file. Please find a sample below:
 ```json
 {
-    "PROJECT_PATH": "/Users/nima/Developer/ArtifactEvaluation/NullAwayFixer/Projects/PhotoView",
+    "PROJECT_PATH": "/Projects/MPAndroidChart",
     "BUILD_COMMAND": "./gradlew build -x test",
-    "INITIALIZE_ANNOT": "com.github.mikephil.Initializer",
-    "FORMAT": ""
+    "ANNOTATION":{
+        "INITIALIZE": "com.github.Initializer",
+        "NONNULL": "javax.annotation.NonNull",
+        "NULLABLE": "javax.annotation.Nullable"
+    },
+    "FORMAT": "",
+    "DEPTH": 4
 }
 ```
 Below is the description of each setting:
 1. `PROJECT_PATH`: The path to the project directory (if a subproject needs to be analyzied, this path needs to point to the subproject not the root project)
 2. `BUILD_COMMAND`: The command to execute `NullAway` for the project at the path given in `PROJECT_PATH`. The script will use the command, `cd PROJECT_PATH && BUILD_COMMAND` to execute `NullAway`.
-3. `INITIALIZE_ANNOT`: Fully qualified name of the `Initializer` annotation to inject on detected initializer methods.
-4. `FORMAT`: Task which automatically reformats the code. This command should be executed at the directory where `BUILD_COMMAND` is executed. Since some projects have checkstyle tasks, reformat task will be executed to pass checkstyles in consecutive builds.
+3. `INITIALIZE`: Fully qualified name of the `Initializer` annotation to inject on detected initializer methods.
+4. `NONNULL`: Fully qualified name of the `Nonnull` annotation.
+5. `NULLABLE`: Fully qualified name of the `Nullable` annotation.
+6. `FORMAT`: Task which automatically reformats the code. This command should be executed at the directory where `BUILD_COMMAND` is executed. Since some projects have checkstyle tasks, reformat task will be executed to pass checkstyles in consecutive builds.
+6. `DEPTH`: The depth of deep analysis.
+
 ## Run
 ---
 Before running, please make sure that all the changes in the `Requirements for Target Project` section has been applied to the target project.
