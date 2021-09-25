@@ -55,6 +55,7 @@ def clean(full=True):
     delete(out_dir + "/errors.csv")
     if(full):
         delete(out_dir + "/reports.json")
+        delete(out_dir + "/log.txt")
     uprint("Finished.")
 
 def prepare():
@@ -63,11 +64,9 @@ def prepare():
 
 def pre():
     uprint("Started preprocessing task...")
-    uprint("Removing old files...")
     method_path = out_dir + "/method_info.csv"
     delete(method_path)
     delete(out_dir + "/init_methods.json")
-    uprint("Removed.")
     uprint("Building project...\n" + build_command)
     new_config = EXPLORER_CONFIG.copy()
     new_config['SUGGEST']['ACTIVE'] = True
@@ -80,12 +79,11 @@ def pre():
     new_config['ANNOTATION']['NONNULL'] = data['ANNOTATION']['NONNULL']
     make_explorer_config(new_config)
     os.system(build_command + " > /dev/null 2>&1")
-    uprint("Built.")
     uprint("Analyzing suggested fixes...")
     fixes = load_csv_to_dict(out_dir + "/fixes.csv")
     uprint("Detecting uninitialized class fields...")
     field_no_inits = [x for x in fixes if (x['reason'] == 'FIELD_NO_INIT' and x['location'] == 'CLASS_FIELD')]
-    uprint("found " + str(len(field_no_inits)) + " fields.")
+    uprint("Found " + str(len(field_no_inits)) + " fields.")
     uprint("Analyzing method infos...")
     methods = load_csv_to_dict(method_path)
     init_methods = {"fixes": []}
@@ -110,10 +108,9 @@ def pre():
                 init_methods['fixes'].append(candidate_method)
     with open(out_dir + "/init_methods.json", 'w') as outfile:
         json.dump(init_methods, outfile)
-    uprint("Finished detecting methods.")
     uprint("Passing to injector to annotate...")
     os.system("cd jars && java -jar NullAwayAutoFixer.jar apply " + out_dir + "/init_methods.json")
-    uprint("Annotated.")
+    uprint("Finshed.")
 
 def diagnose():
     new_config = EXPLORER_CONFIG.copy()
@@ -123,11 +120,9 @@ def diagnose():
     new_config['ANNOTATION']['NULLABLE'] = data['ANNOTATION']['NULLABLE']
     new_config['ANNOTATION']['NONNULL'] = data['ANNOTATION']['NONNULL']
     make_explorer_config(new_config)
-    uprint("Started diagnose task...")
-    uprint("Making build command for project...")
     build_command = '"cd ' + data['PROJECT_PATH'] + " && " + data['BUILD_COMMAND'] + '"'
     uprint("Detected build command: " + build_command)
-    uprint("Diagnosing...")
+    uprint("Starting AutoFixer...")
     os.system("cd jars && java -jar NullAwayAutoFixer.jar diagnose " + out_dir + " " + build_command + " " + str(data['DEPTH']) + " " + data['ANNOTATION']['NULLABLE'])
     uprint("Finsihed.")
     if(data['FORMAT'] != ""):
@@ -135,13 +130,11 @@ def diagnose():
 
 def apply():
     delete(out_dir + "/cleaned.json")
-    uprint("Analyzing diagnose report...")
     report_file = open(out_dir + "/diagnose_report.json")
     reports = json.load(report_file)
     cleaned = {}
     uprint("Selecting effective fixes...")
     cleaned['fixes'] = [fix for fix in reports['reports'] if fix['jump'] < 1]
-    uprint("Selected effective fixes.")
     with open(out_dir + "/cleaned.json", 'w') as outfile:
         json.dump(cleaned, outfile)
     uprint("Applying fixes at location: " + out_dir + "/cleaned.json")
@@ -149,10 +142,10 @@ def apply():
 
 def loop():
     uprint("Executing loop command")
+    delete(out_dir + "/log.txt")
     finished = False
     while(not finished):
         finished = True
-        uprint("Executing (optimized) diagnose task...")
         diagnose()
         uprint("Diagnsoe task finished, applying effective fixes...")
         apply()
