@@ -5,7 +5,13 @@ import shutil
 import time
 
 data = json.load(open('config.json'))
-build_command = "cd " + data['PROJECT_PATH'] + " && " + data['BUILD_COMMAND']
+
+if 'REPO_ROOT_PATH' not in data:
+    # By default, the path to the repo root (where the build command must be run) and the
+    # path to the project source is the same. This works for most gradle projects.
+    data['REPO_ROOT_PATH'] = data['PROJECT_PATH']
+
+build_command = "cd {} && {} && cd {}".format(data['REPO_ROOT_PATH'], data['BUILD_COMMAND'], data['PROJECT_PATH'])
 out_dir = "/tmp/NullAwayFix"
 delimiter = "$*$"
 
@@ -120,7 +126,7 @@ def diagnose():
     new_config['ANNOTATION']['NULLABLE'] = data['ANNOTATION']['NULLABLE']
     new_config['ANNOTATION']['NONNULL'] = data['ANNOTATION']['NONNULL']
     make_explorer_config(new_config)
-    build_command = '"cd ' + data['PROJECT_PATH'] + " && " + data['BUILD_COMMAND'] + '"'
+    build_command = '"cd ' + data['REPO_ROOT_PATH'] + " && " + data['BUILD_COMMAND'] + '"'
     uprint("Detected build command: " + build_command)
     uprint("Starting AutoFixer...")
     os.system("cd jars && java -jar NullAwayAutoFixer.jar diagnose " + out_dir + " " + build_command + " " + str(data['DEPTH']) + " " + data['ANNOTATION']['NULLABLE'])
