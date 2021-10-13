@@ -1,5 +1,5 @@
 # Diagnoser
-Script to run [AutoFixer](https://github.com/nimakarimipour/NullAwayAutoFixer) Diagnoser task
+Script to run [AutoFixer](https://github.com/nimakarimipour/NullAwayAutoFixer).
 
 ## Dependencies
 ---
