@@ -67,6 +67,9 @@ def clean(full=True):
 def prepare():
     if not os.path.exists(out_dir):
         os.makedirs(out_dir)
+    failed = {"fixes":[]}  
+    with open(out_dir + "/failed.json", 'w') as outfile:
+        json.dump(failed, outfile)  
 
 def pre():
     uprint("Started preprocessing task...")
