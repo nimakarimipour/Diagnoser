@@ -9,6 +9,9 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/units" />
+            <option value="$PROJECT_DIR$/units/dupimports" />
+            <option value="$PROJECT_DIR$/units/lombok" />
           </set>
         </option>
       </GradleProjectSettings>
