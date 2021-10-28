@@ -8,12 +8,15 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import javax.annotation.Nullable;
 
 /**
  * THIS IS JAVADOC
  */
 
 public class Main {
+
+    @Nullable
     public Object run(){
         //dummy just to import random stuff
         ArrayList<Object> d0;

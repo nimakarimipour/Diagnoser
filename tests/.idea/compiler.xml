@@ -59,8 +59,8 @@
           <entry name="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.googlecode.java-diff-utils/diffutils/1.3.0/7e060dd5b19431e6d198e91ff670644372f60fbd/diffutils-1.3.0.jar" />
           <entry name="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.kevinstern/software-and-algorithms/1.0/5e77666b72c6c5dd583c36148d17fc47f944dfb5/software-and-algorithms-1.0.jar" />
         </processorPath>
-        <module name="tests.units.dupimports.main" />
         <module name="tests.units.lombok" />
+        <module name="tests.units.dupimports" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel target="1.8" />
