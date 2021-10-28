@@ -4,7 +4,14 @@ import json
 import shutil
 import time
 
-data = json.load(open('config.json'))
+if(not (len(sys.argv) in [2, 3])):
+    raise ValueError("Needs one argument to run: diagnose/apply/pre/loop/clean")
+
+data = None
+if(len(sys.argv) == 2):
+    data = json.load(open('config.json'))
+else:
+    data = json.load(open(sys.argv[2]))
 
 if 'REPO_ROOT_PATH' not in data:
     # By default, the path to the repo root (where the build command must be run) and the
@@ -14,10 +21,6 @@ if 'REPO_ROOT_PATH' not in data:
 build_command = "cd {} && {} && cd {}".format(data['REPO_ROOT_PATH'], data['BUILD_COMMAND'], data['PROJECT_PATH'])
 out_dir = "/tmp/NullAwayFix"
 delimiter = "$*$"
-
-
-if(len(sys.argv) != 2):
-    raise ValueError("Needs one argument to run: diagnose/apply/pre/loop/clean")
 
 EXPLORER_CONFIG = json.load(open('template.config'))
 

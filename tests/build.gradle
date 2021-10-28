@@ -1,0 +1,42 @@
+plugins {
+    id 'java'
+    id("net.ltgt.errorprone") version "0.6"
+    id 'idea'
+}
+
+group 'org.example'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+    annotationProcessor "com.uber.nullaway:nullaway:0.9.2"
+
+    // Optional, some source of nullability annotations.
+    // Not required on Android if you use the support
+    // library nullability annotations.
+    compileOnly "com.google.code.findbugs:jsr305:3.0.2"
+
+    errorprone "com.google.errorprone:error_prone_core:2.4.0"
+    errorproneJavac "com.google.errorprone:javac:9+181-r4173-1"
+}
+
+test {
+    useJUnitPlatform()
+}
+
+tasks.withType(JavaCompile) {
+    if (!name.toLowerCase().contains("test")) {
+        options.errorprone.errorproneArgs += ["-XepDisableAllChecks",
+                                              "-Xep:NullAway:ERROR",
+                                              "-XepOpt:NullAway:AnnotatedPackages=tests",
+                                              "-XepOpt:NullAway:AutoFix=true",
+                                              "-XepDisableAllWarnings"]
+        options.compilerArgs << "-Xmaxerrs" << "100000"
+    }
+}
