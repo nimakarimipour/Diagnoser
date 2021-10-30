@@ -2,6 +2,6 @@ rootProject.name = 'tests'
 
 include ':units'
 include ':units:dupimports'
-include ':units:lombok'
+include ':units:sample'
 include ':units:interface'
 
