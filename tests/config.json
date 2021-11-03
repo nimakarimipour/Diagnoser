@@ -1,6 +1,6 @@
 {
     "PROJECT_PATH": "/home/nima/Developer/AutoFixer/Diagnoser/tests",
-    "BUILD_COMMAND": "./gradlew :units:dupimports:build -x test",
+    "BUILD_COMMAND": "./gradlew :units:interface:build -x test",
     "ANNOTATION": {
         "INITIALIZE": "tests.Initializer",
         "NONNULL": "javax.annotation.NonNull",

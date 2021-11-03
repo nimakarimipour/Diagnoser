@@ -1,5 +1,4 @@
-package tests;
-
+package tests.com;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -8,14 +7,14 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
-import javax.annotation.Nullable;
+
 /**
  * THIS IS JAVADOC
  */
-
-
 public class Main {
-    @Nullable
+
+    Object f;
+
     public Object run(){
         //dummy just to import random stuff
         ArrayList<Object> d0;
@@ -26,5 +25,9 @@ public class Main {
         Random d5;
         Arrays d6;
         return null;
+    }
+
+    public void setF(Object f){
+        this.f = f;
     }
 }
