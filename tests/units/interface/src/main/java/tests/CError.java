@@ -8,7 +8,8 @@ public class CError implements I{
     }
 
     public void bar(Object foo){
-
+        String name = foo.toString();
+        Integer hash = foo.hashCode();
     }
 
     public void run(){

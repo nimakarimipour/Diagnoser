@@ -1,6 +1,6 @@
 package tests;
 
-public class CError2 implements I{
+public class CResolvable2 implements I{
 
     @Override
     public Object foo() {
@@ -8,8 +8,7 @@ public class CError2 implements I{
     }
 
     public void bar(Object foo){
-        String name = foo.toString();
-        Integer hash = foo.hashCode();
+
     }
 
     public void run(){

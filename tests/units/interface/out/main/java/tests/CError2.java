@@ -11,7 +11,8 @@ public class CError2 implements I{
     }
 
     public void bar(@Nullable Object foo){
-
+        String name = foo.toString();
+        Integer hash = foo.hashCode();
     }
 
     public void run(){

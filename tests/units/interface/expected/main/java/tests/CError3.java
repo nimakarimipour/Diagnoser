@@ -2,7 +2,7 @@ package tests;
 import javax.annotation.Nullable;
 
 
-public class CError2 implements I{
+public class CError3 implements I{
 
     @Override
     @Nullable
