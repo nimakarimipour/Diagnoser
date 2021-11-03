@@ -131,7 +131,5 @@ dmypy.json
 # Custom
 .gradle/
 .DS_Store
-.idea/
 updatejar.py
 tests/.gradle/
-tests/.idea/
