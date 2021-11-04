@@ -133,3 +133,4 @@ dmypy.json
 .DS_Store
 updatejar.py
 tests/.gradle/
+tests/.gradle/*

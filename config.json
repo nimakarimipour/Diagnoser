@@ -6,6 +6,6 @@
         "NONNULL": "javax.annotation.NonNull",
         "NULLABLE": "javax.annotation.Nullable"
     },
-    "FORMAT": "",
+    "FORMAT": true,
     "DEPTH": 4
 }

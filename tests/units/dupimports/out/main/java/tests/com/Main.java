@@ -1,4 +1,6 @@
 package tests.com;
+import javax.annotation.Nullable;
+import tests.Initializer;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -7,13 +9,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
-import tests.Initializer;
+
 /**
  * THIS IS JAVADOC
  */
-import javax.annotation.Nullable;
-import javax.annotation.Nullable;
-
 public class Main {
 
     Object f;

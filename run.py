@@ -4,11 +4,12 @@ import json
 import shutil
 import time
 
-if(not (len(sys.argv) in [2, 3])):
-    raise ValueError("Needs one argument to run: diagnose/apply/pre/loop/clean")
+if (not (len(sys.argv) in [2, 3])):
+    raise ValueError(
+        "Needs one argument to run: diagnose/apply/pre/loop/clean")
 
 data = None
-if(len(sys.argv) == 2):
+if (len(sys.argv) == 2):
     data = json.load(open('config.json'))
 else:
     data = json.load(open(sys.argv[2]))
@@ -18,9 +19,14 @@ if 'REPO_ROOT_PATH' not in data:
     # path to the project source is the same. This works for most gradle projects.
     data['REPO_ROOT_PATH'] = data['PROJECT_PATH']
 
-build_command = "cd {} && {} && cd {}".format(data['REPO_ROOT_PATH'], data['BUILD_COMMAND'], data['PROJECT_PATH'])
+build_command = "cd {} && {} && cd {}".format(data['REPO_ROOT_PATH'],
+                                              data['BUILD_COMMAND'],
+                                              data['PROJECT_PATH'])
 out_dir = "/tmp/NullAwayFix"
 delimiter = "$*$"
+format_style = str(data['FORMAT']).lower()
+format_style = "false" if format_style not in ["true", "false"] else format_style
+print(format_style)
 
 EXPLORER_CONFIG = json.load(open('template.config'))
 
@@ -38,6 +44,7 @@ def load_csv_to_dict(path):
         ans.append(item)
     return ans
 
+
 def make_explorer_config(config):
     with open('/tmp/NullAwayFix/explorer.config', 'w') as outfile:
         json.dump(config, outfile)
@@ -49,9 +56,11 @@ def delete(file):
     except OSError:
         pass
 
+
 def uprint(message):
-    print(message, flush=True) 
-    sys.stdout.flush()  
+    print(message, flush=True)
+    sys.stdout.flush()
+
 
 def clean(full=True):
     uprint("Cleaning...")
@@ -62,17 +71,19 @@ def clean(full=True):
     delete(out_dir + "/init_methods.json")
     delete(out_dir + "/method_info.csv")
     delete(out_dir + "/errors.csv")
-    if(full):
+    if (full):
         delete(out_dir + "/reports.json")
         delete(out_dir + "/log.txt")
     uprint("Finished.")
 
+
 def prepare():
     if not os.path.exists(out_dir):
         os.makedirs(out_dir)
-    failed = {"fixes":[]}  
+    failed = {"fixes": []}
     with open(out_dir + "/failed.json", 'w') as outfile:
-        json.dump(failed, outfile)  
+        json.dump(failed, outfile)
+
 
 def pre():
     uprint("Started preprocessing task...")
@@ -94,7 +105,10 @@ def pre():
     uprint("Analyzing suggested fixes...")
     fixes = load_csv_to_dict(out_dir + "/fixes.csv")
     uprint("Detecting uninitialized class fields...")
-    field_no_inits = [x for x in fixes if (x['reason'] == 'FIELD_NO_INIT' and x['location'] == 'CLASS_FIELD')]
+    field_no_inits = [
+        x for x in fixes
+        if (x['reason'] == 'FIELD_NO_INIT' and x['location'] == 'CLASS_FIELD')
+    ]
     uprint("Found " + str(len(field_no_inits)) + " fields.")
     uprint("Analyzing method infos...")
     methods = load_csv_to_dict(method_path)
@@ -102,13 +116,14 @@ def pre():
     uprint("Selecting appropriate method for each class field...")
     for field in field_no_inits:
         candidate_method = None
-        max = 0 
+        max = 0
         for method in methods:
-            if(method['class'] == field['class']):
-                if(field['param'] in method['fields'] and len(method['fields']) > max):
+            if (method['class'] == field['class']):
+                if (field['param'] in method['fields']
+                        and len(method['fields']) > max):
                     candidate_method = method.copy()
                     max = len(method['fields'])
-        if(candidate_method != None):
+        if (candidate_method != None):
             del candidate_method['fields']
             candidate_method['location'] = "METHOD_RETURN"
             candidate_method['inject'] = True
@@ -116,13 +131,14 @@ def pre():
             candidate_method['param'] = ""
             candidate_method['reason'] = "Initializer"
             candidate_method['pkg'] = ""
-            if(candidate_method not in init_methods['fixes']):
+            if (candidate_method not in init_methods['fixes']):
                 init_methods['fixes'].append(candidate_method)
     with open(out_dir + "/init_methods.json", 'w') as outfile:
         json.dump(init_methods, outfile)
     uprint("Passing to injector to annotate...")
-    os.system("cd jars && java -jar NullAwayAutoFixer.jar apply " + out_dir + "/init_methods.json")
+    os.system("cd jars && java -jar NullAwayAutoFixer.jar apply {}/init_methods.json {}".format(out_dir, format_style))
     uprint("Finshed.")
+
 
 def diagnose():
     new_config = EXPLORER_CONFIG.copy()
@@ -132,13 +148,15 @@ def diagnose():
     new_config['ANNOTATION']['NULLABLE'] = data['ANNOTATION']['NULLABLE']
     new_config['ANNOTATION']['NONNULL'] = data['ANNOTATION']['NONNULL']
     make_explorer_config(new_config)
-    build_command = '"cd ' + data['REPO_ROOT_PATH'] + " && " + data['BUILD_COMMAND'] + '"'
+    build_command = '"cd ' + data['REPO_ROOT_PATH'] + " && " + data[
+        'BUILD_COMMAND'] + '"'
     uprint("Detected build command: " + build_command)
     uprint("Starting AutoFixer...")
-    os.system("cd jars && java -jar NullAwayAutoFixer.jar diagnose " + out_dir + " " + build_command + " " + str(data['DEPTH']) + " " + data['ANNOTATION']['NULLABLE'])
+    command = "cd jars && java -jar NullAwayAutoFixer.jar diagnose {} {} {} {} {}".format(out_dir, build_command, str(data['DEPTH']), data['ANNOTATION']['NULLABLE'], format_style)
+    print(command)
+    os.system(command)
     uprint("Finsihed.")
-    if(data['FORMAT'] != ""):
-        os.system("cd " + data['PROJECT_PATH'] + " && " + data['format'])
+
 
 def apply():
     delete(out_dir + "/cleaned.json")
@@ -150,20 +168,21 @@ def apply():
     with open(out_dir + "/cleaned.json", 'w') as outfile:
         json.dump(cleaned, outfile)
     uprint("Applying fixes at location: " + out_dir + "/cleaned.json")
-    os.system("cd jars && java -jar NullAwayAutoFixer.jar apply " + out_dir + "/cleaned.json")
+    os.system("cd jars && java -jar NullAwayAutoFixer.jar apply {}/cleaned.json {}".format(out_dir, format_style))
+
 
 def loop():
     uprint("Executing loop command")
     delete(out_dir + "/log.txt")
     finished = False
-    while(not finished):
+    while (not finished):
         finished = True
         diagnose()
         uprint("Diagnsoe task finished, applying effective fixes...")
         apply()
         uprint("Applied.")
         new_reports = json.load(open(out_dir + "/diagnose_report.json"))
-        if(len(new_reports['reports']) == 0):
+        if (len(new_reports['reports']) == 0):
             uprint("No changes, shutting down.")
             break
         old_reports = json.load(open(out_dir + "/reports.json"))
@@ -176,15 +195,16 @@ def loop():
             outfile.close()
     clean(full=False)
 
+
 command = sys.argv[1]
 prepare()
-if(command == "pre"):
+if (command == "pre"):
     pre()
-elif(command == "diagnose"):
+elif (command == "diagnose"):
     diagnose()
-elif(command == "apply"):
+elif (command == "apply"):
     apply()
-elif(command == "loop"):
+elif (command == "loop"):
     clean()
     pre()
     reports = open(out_dir + "/reports.json", "w")
@@ -195,21 +215,20 @@ elif(command == "loop"):
     loop()
     end = time.time()
     print("Elapsed time in seconds: " + str(end - start))
-elif(command == "clean"):
+elif (command == "clean"):
     clean()
-    delete_folder = input("Delete " +  out_dir + " directory too ? (y/n)\n")
-    if(delete_folder.lower() in ["yes", "y"]):
+    delete_folder = input("Delete " + out_dir + " directory too ? (y/n)\n")
+    if (delete_folder.lower() in ["yes", "y"]):
         try:
             shutil.rmtree(out_dir)
         except:
-            uprint("Failed to remove directory: " + out_dir) 
-elif(command == "reset"):
+            uprint("Failed to remove directory: " + out_dir)
+elif (command == "reset"):
     clean()
     try:
         shutil.rmtree(out_dir)
     except:
-        uprint("Failed to remove directory: " + out_dir) 
+        uprint("Failed to remove directory: " + out_dir)
 
 else:
     raise ValueError("Unknown command.")
-    
