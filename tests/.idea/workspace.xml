@@ -4,7 +4,30 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="92ff9369-d3f7-4eab-97d5-6f81ae0a28cd" name="Changes" comment="" />
+    <list default="true" id="92ff9369-d3f7-4eab-97d5-6f81ae0a28cd" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/google-java-format.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/tests.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/6.1/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/6.1/executionHistory/executionHistory.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/6.1/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/6.1/executionHistory/executionHistory.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/6.1/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/6.1/fileHashes/fileHashes.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/6.1/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/6.1/fileHashes/fileHashes.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config.json" beforeDir="false" afterPath="$PROJECT_DIR$/config.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/units/dupimports/out/main/java/tests/com/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/units/dupimports/out/main/java/tests/com/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/units/interface/out/main/java/tests/C.java" beforeDir="false" afterPath="$PROJECT_DIR$/units/interface/out/main/java/tests/C.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/units/interface/out/main/java/tests/CError.java" beforeDir="false" afterPath="$PROJECT_DIR$/units/interface/out/main/java/tests/CError.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/units/interface/out/main/java/tests/CError2.java" beforeDir="false" afterPath="$PROJECT_DIR$/units/interface/out/main/java/tests/CError2.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/units/interface/out/main/java/tests/CError3.java" beforeDir="false" afterPath="$PROJECT_DIR$/units/interface/out/main/java/tests/CError3.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/units/interface/out/main/java/tests/CResolvable.java" beforeDir="false" afterPath="$PROJECT_DIR$/units/interface/out/main/java/tests/CResolvable.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/units/interface/out/main/java/tests/CResolvable2.java" beforeDir="false" afterPath="$PROJECT_DIR$/units/interface/out/main/java/tests/CResolvable2.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/units/interface/out/main/java/tests/I.java" beforeDir="false" afterPath="$PROJECT_DIR$/units/interface/out/main/java/tests/I.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -54,16 +77,16 @@
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="android.sdk.path" value="$USER_HOME$/Android/Sdk" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/units" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
     <property name="node.js.selected.package.tslint" value="(autodetect)" />
     <property name="nodejs_package_manager_path" value="npm" />
-    <property name="project.structure.last.edited" value="Modules" />
+    <property name="project.structure.last.edited" value="Project" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
-    <property name="settings.editor.selected.configurable" value="configurable.group.tools" />
+    <property name="settings.editor.selected.configurable" value="reference.settingsdialog.project.gradle" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
@@ -96,9 +119,14 @@
       <workItem from="1635387771093" duration="1080000" />
       <workItem from="1635440955311" duration="23843000" />
       <workItem from="1635886985118" duration="5710000" />
+<<<<<<< HEAD
       <workItem from="1635960951755" duration="2421000" />
       <workItem from="1635969582848" duration="4000" />
       <workItem from="1636062144168" duration="117000" />
+=======
+      <workItem from="1635960951755" duration="1181000" />
+      <workItem from="1635963029891" duration="193000" />
+>>>>>>> 8af2e98374564946a83f06bdecee68a74d3a7e56
     </task>
     <servers />
   </component>

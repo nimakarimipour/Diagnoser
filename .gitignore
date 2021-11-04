@@ -129,7 +129,7 @@ dmypy.json
 .pyre/
 
 # Custom
-.gradle/
+.gradle/*
 .DS_Store
 updatejar.py
 tests/.gradle/
