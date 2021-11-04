@@ -1,9 +1,5 @@
 {
-<<<<<<< HEAD
     "PROJECT_PATH": "/home/nima/Developer/AutoFixer/Diagnoser/tests",
-=======
-    "PROJECT_PATH": "/Users/nima/Developer/NullAwayFixer/Scripts/Diagnoser/tests",
->>>>>>> 8af2e98374564946a83f06bdecee68a74d3a7e56
     "BUILD_COMMAND": "./gradlew :units:dupimports:build -x test",
     "ANNOTATION": {
         "INITIALIZE": "tests.Initializer",
