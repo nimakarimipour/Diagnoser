@@ -1,3 +1,5 @@
+VERSION = 1.0
+
 import os
 import sys
 import json

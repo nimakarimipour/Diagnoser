@@ -1,11 +1,11 @@
 {
     "PROJECT_PATH": "/home/nima/Developer/AutoFixer/Evaluation/Projects/libgdx",
-    "BUILD_COMMAND": "./gradlew gdx:build -x test",
-    "ANNOTATION":{
+    "BUILD_COMMAND": "./gradlew gdx:compileJava",
+    "ANNOTATION": {
         "INITIALIZE": "com.badlogic.gdx.Initializer",
         "NONNULL": "javax.annotation.NonNull",
         "NULLABLE": "javax.annotation.Nullable"
     },
-    "FORMAT": true,
-    "DEPTH": 4
+    "FORMAT": false,
+    "DEPTH": 0
 }
