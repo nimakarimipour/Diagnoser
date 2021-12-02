@@ -1,4 +1,4 @@
-VERSION = "1.1.0-LOCAL"
+VERSION = "1.1.1-LOCAL"
 
 import os
 import sys
