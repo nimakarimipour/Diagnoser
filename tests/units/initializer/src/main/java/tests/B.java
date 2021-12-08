@@ -2,9 +2,15 @@ package tests;
 
 public abstract class B {
     protected Baz foo;
+    private Object item;
 
     enum Baz{
         Bar
+    }
+    public void notItemInitializer(){
+        if(item == null){
+            throw new RuntimeException("Whoops");
+        }
     }
 
     public boolean isBar() {
