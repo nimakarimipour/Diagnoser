@@ -1,4 +1,4 @@
 package tests;
 
-public interface Initializer {
+public @interface Initializer {
 }
