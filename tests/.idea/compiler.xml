@@ -30,6 +30,7 @@
           <entry name="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.codehaus.mojo/animal-sniffer-annotations/1.17/f97ce6decaea32b36101e37979f8b647f00681fb/animal-sniffer-annotations-1.17.jar" />
         </processorPath>
         <module name="tests.test" />
+        <module name="tests.units.initializer.test" />
         <module name="tests.units.dupimports.test" />
         <module name="tests.units.test" />
         <module name="tests.units.interface.test" />
@@ -70,6 +71,7 @@
         <module name="tests.units.dupimports.main" />
         <module name="tests.units.interface.main" />
         <module name="tests.units.main" />
+        <module name="tests.units.initializer.main" />
         <module name="tests.units.sample.main" />
         <module name="tests.main" />
       </profile>

@@ -14,6 +14,7 @@
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/units" />
             <option value="$PROJECT_DIR$/units/dupimports" />
+            <option value="$PROJECT_DIR$/units/initializer" />
             <option value="$PROJECT_DIR$/units/interface" />
             <option value="$PROJECT_DIR$/units/sample" />
           </set>

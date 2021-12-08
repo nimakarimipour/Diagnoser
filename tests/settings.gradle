@@ -4,4 +4,5 @@ include ':units'
 include ':units:dupimports'
 include ':units:sample'
 include ':units:interface'
+include ':units:initializer'
 
