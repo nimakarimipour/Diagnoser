@@ -30,6 +30,7 @@ allprojects {
                                                   "-Xep:NullAway:ERROR",
                                                   "-XepOpt:NullAway:AnnotatedPackages=tests",
                                                   "-XepOpt:NullAway:AutoFix=true",
+                                                  "-XepOpt:NullAway:AutoFixOutPutDirectory=/tmp/NullAwayFix",
                                                   "-XepDisableAllWarnings"]
             options.compilerArgs << "-Xmaxerrs" << "100000"
         }
