@@ -134,3 +134,4 @@ dmypy.json
 updatejar.py
 tests/.gradle/
 tests/.gradle/*
+*.class

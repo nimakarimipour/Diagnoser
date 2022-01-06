@@ -1,17 +1,15 @@
 package tests;
 
-public class CResolvable implements I{
+public class CResolvable implements I {
 
-    @Override
-    public Object foo() {
-        return null;
-    }
+  @Override
+  public Object foo() {
+    return null;
+  }
 
-    public void bar(Object foo){
+  public void bar(Object foo) {}
 
-    }
-
-    public void run(){
-        bar(foo());
-    }
+  public void run() {
+    bar(foo());
+  }
 }

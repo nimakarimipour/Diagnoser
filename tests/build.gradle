@@ -7,6 +7,10 @@ buildscript {
     }
 }
 
+plugins {
+    id "com.github.sherter.google-java-format" version "0.8"
+}
+
 allprojects {
 
     apply plugin: 'net.ltgt.errorprone'
@@ -20,7 +24,7 @@ allprojects {
     dependencies {
         compileOnly "com.google.code.findbugs:jsr305:3.0.2"
         annotationProcessor "edu.ucr.cs.riple:nullaway:0.7.12-SNAPSHOT"
-        errorprone "com.google.errorprone:error_prone_core:2.4.0"
+        errorprone 'com.google.errorprone:error_prone_core:2.10.0'
         errorproneJavac "com.google.errorprone:javac:9+181-r4173-1"
     }
 
