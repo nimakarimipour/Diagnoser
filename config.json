@@ -1,11 +1,11 @@
 {
-    "PROJECT_PATH": "/home/nima/Developer/AutoFixer/Evaluation/Projects/libgdx",
-    "BUILD_COMMAND": "./gradlew gdx:compileJava",
+    "PROJECT_PATH": "/home/nima/Developer/AutoFixer/Evaluation/Projects/jadx",
+    "BUILD_COMMAND": "./gradlew build",
     "ANNOTATION": {
-        "INITIALIZE": "com.badlogic.gdx.Initializer",
+        "INITIALIZE": "jadx.Initializer",
         "NONNULL": "javax.annotation.NonNull",
-        "NULLABLE": "javax.annotation.Nullable"
+        "NULLABLE": "org.jetbrains.annotations.Nullable"
     },
     "FORMAT": false,
-    "DEPTH": 0
+    "DEPTH": 4
 }
