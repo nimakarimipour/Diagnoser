@@ -8,26 +8,24 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-/**
- * THIS IS JAVADOC
- */
+/** THIS IS JAVADOC */
 public class Main {
 
-    Object f;
+  Object f;
 
-    public Object run(){
-        //dummy just to import random stuff
-        ArrayList<Object> d0;
-        List<Object> d1;
-        HashMap<Object, Object> d2;
-        Map<Object, Object> d3;
-        LinkedList<Object> d4;
-        Random d5;
-        Arrays d6;
-        return null;
-    }
+  public Object run() {
+    // dummy just to import random stuff
+    ArrayList<Object> d0;
+    List<Object> d1;
+    HashMap<Object, Object> d2;
+    Map<Object, Object> d3;
+    LinkedList<Object> d4;
+    Random d5;
+    Arrays d6;
+    return null;
+  }
 
-    public void setF(Object f){
-        this.f = f;
-    }
+  public void setF(Object f) {
+    this.f = f;
+  }
 }

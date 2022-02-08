@@ -59,7 +59,8 @@ def test(name: str):
     os.system("python3 run.py loop tests/config.json")
     os.renames(TEST_DIR.format("src/"), TEST_DIR.format("out/"))
     os.renames(TEST_DIR.format("tmp/"), TEST_DIR.format("src/"))
-    status, difs = compare_dirs(TEST_DIR.format("out/"), TEST_DIR.format("expected/"))
+    os.system("cd {} && ./gradlew goJF".format(PROJECT_PATH))
+    status, difs = compare_dirs(TEST_DIR.format("out/main/"), TEST_DIR.format("expected/main/"))
     if(status):
         print_status("{} - TEST WAS SUCCESSFUL".format(name), True)
     else:

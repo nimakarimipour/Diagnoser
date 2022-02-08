@@ -1,29 +1,28 @@
 package tests;
-import tests.Initializer;
-
 
 public abstract class B {
-    protected Baz foo;
-    private Object item;
+  protected Baz foo;
+  private Object item;
 
-    enum Baz{
-        Bar
-    }
-    @Initializer
-    public void notItemInitializer(){
-        if(item == null){
-            throw new RuntimeException("Whoops");
-        }
-    }
+  enum Baz {
+    Bar
+  }
 
-    @Initializer
-    public boolean isBar() {
-        return this.foo == Baz.Bar; // where Baz is an enum
+  @Initializer
+  public void notItemInitializer() {
+    if (item == null) {
+      throw new RuntimeException("Whoops");
     }
+  }
+
+  @Initializer
+  public boolean isBar() {
+    return this.foo == Baz.Bar; // where Baz is an enum
+  }
 }
 
 class A extends B {
-    public A() {
-        this.foo = Baz.Bar; // non-null expr
-    }
+  public A() {
+    this.foo = Baz.Bar; // non-null expr
+  }
 }

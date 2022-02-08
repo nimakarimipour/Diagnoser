@@ -1,6 +1,6 @@
 {
-    "PROJECT_PATH": "/home/nima/Developer/AutoFixer/Diagnoser/tests",
-    "BUILD_COMMAND": "./gradlew :units:initializer:build -x test",
+    "PROJECT_PATH": "/Users/nima/Developer/NullAwayFixer/Scripts/Diagnoser/tests",
+    "BUILD_COMMAND": "./gradlew :units:whiteline:build -x test",
     "ANNOTATION": {
         "INITIALIZE": "tests.Initializer",
         "NONNULL": "javax.annotation.NonNull",

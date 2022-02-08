@@ -17,6 +17,7 @@
             <option value="$PROJECT_DIR$/units/initializer" />
             <option value="$PROJECT_DIR$/units/interface" />
             <option value="$PROJECT_DIR$/units/sample" />
+            <option value="$PROJECT_DIR$/units/whiteline" />
           </set>
         </option>
       </GradleProjectSettings>
