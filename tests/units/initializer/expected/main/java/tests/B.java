@@ -1,7 +1,10 @@
 package tests;
 
+import javax.annotation.Nullable;
+
 public abstract class B {
   protected Baz foo;
+  @Nullable
   private Object item;
 
   enum Baz {

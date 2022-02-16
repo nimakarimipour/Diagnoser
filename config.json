@@ -1,11 +1,1 @@
-{
-    "PROJECT_PATH": "/home/nima/Developer/AutoFixer/Evaluation/Projects/jadx",
-    "BUILD_COMMAND": "./gradlew build",
-    "ANNOTATION": {
-        "INITIALIZE": "jadx.Initializer",
-        "NONNULL": "javax.annotation.NonNull",
-        "NULLABLE": "org.jetbrains.annotations.Nullable"
-    },
-    "FORMAT": false,
-    "DEPTH": 4
-}
+{"PROJECT_PATH": "/home/nima/Developer/AutoFixer/Evaluation/Projects/MPAndroidChart", "BUILD_COMMAND": "./gradlew build -x test", "ANNOTATION": {"INITIALIZE": "com.github.mikephil.charting.Initializer", "NONNULL": "", "NULLABLE": "androidx.annotation.Nullable"}, "FORMAT": false, "DEPTH": 4}
